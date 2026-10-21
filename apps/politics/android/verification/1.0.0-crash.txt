@@ -1,0 +1,25 @@
+--------- beginning of crash
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: FATAL EXCEPTION: main
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: Process: com.yanxi.politics, PID: 2717
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: java.lang.RuntimeException: Unable to start activity ComponentInfo{com.yanxi.politics/com.yanxi.politics.MainActivity}: java.lang.NullPointerException: Attempt to invoke virtual method 'android.view.WindowInsetsController com.android.internal.policy.DecorView.getWindowInsetsController()' on a null object reference
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3782)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3922)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:103)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:139)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:96)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2443)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'android.view.WindowInsetsController com.android.internal.policy.DecorView.getWindowInsetsController()' on a null object reference
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at com.android.internal.policy.PhoneWindow.getInsetsController(PhoneWindow.java:3968)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at com.yanxi.politics.MainActivity.onCreate(MainActivity.java:35)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:8595)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:8573)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1456)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3764)
+10-08 08:33:53.910  2717  2717 E AndroidRuntime: 	... 12 more

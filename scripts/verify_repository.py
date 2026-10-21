@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ERRORS = []
-EXPECTED = {'math': 1464, 'calculus': 925, 'probability': 221, 'linear-algebra': 318}
+EXPECTED = {'math': 1464, 'calculus': 925, 'probability': 221, 'linear-algebra': 318, 'politics': 1500}
 
 
 def error(message):
@@ -32,7 +32,7 @@ for name, expected in EXPECTED.items():
         error(f'{name}: source and runtime banks differ')
     refs = 0
     for q in rows:
-        if not (q.get('image') or q.get('questionText')):
+        if not (q.get('image') or q.get('questionText') or q.get('question') or q.get('stem')):
             error(f"{name}/{q['id']}: missing prompt")
         for key in ('image', 'answerImage'):
             value = q.get(key)

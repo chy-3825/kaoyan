@@ -53,3 +53,7 @@ python3 scripts/build_supplemental.py
 PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源可变，重新生成结果不保证与快照相同；2026 裁图问题仍需修复。
 
 高数、概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。更新数学总库不会自动同步到三个专题 App。
+
+## 政治 App
+
+政治分区保留原有独立 Web 版本 `app/dist/` 和 Android 版本 `android/web/`，两者功能版本不同，使用 Android 当前题库时以 `android/web/` 为准。构建与环境见 [Android 说明](../apps/politics/android/README.md)；题库重建依赖见其 `requirements.txt` 和根 README。

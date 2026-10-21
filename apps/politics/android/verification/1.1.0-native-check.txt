@@ -1,0 +1,1 @@
+PASS: Android 14; 3 cold starts; 1.0.1 record retained after upgrade; home, questions, native clipboard, encrypted API settings, native request error callback/copy fallback, key deletion, back navigation; no app crash. API success tested with mock responses only; no real user API key supplied.

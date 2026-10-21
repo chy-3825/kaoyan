@@ -1,19 +1,20 @@
 # 考研数学 · 研习系列
 
-四个独立 Android 离线练习 App 的源码与题库。按课程、章节、考点练习，支持错题本、已有参考答案，以及使用个人 API Key 请求解析。
+五个独立 Android 离线练习 App 的源码与题库。按课程、章节、考点练习，支持错题本、已有参考答案，以及使用个人 API Key 请求解析。
 
 ## 项目分区
 
 | 分区 | App | 源码题数 | 历年题 / 补充题 | 入口 |
 | --- | --- | ---: | ---: | --- |
+| `apps/politics` | 研习政治 | 1,500 | 594 / 906 | [说明与构建](apps/politics/README.md) |
 | `apps/math` | 研习数学：数学一、二、三总库 | 1,464 | 1,224 / 240 | [说明与构建](apps/math/README.md) |
 | `apps/calculus` | 研习高数 | 925 | 773 / 152 | [说明与构建](apps/calculus/README.md) |
 | `apps/probability` | 研习概率 | 221 | 181 / 40 | [说明与构建](apps/probability/README.md) |
 | `apps/linear-algebra` | 研习线代 | 318 | 270 / 48 | [说明与构建](apps/linear-algebra/README.md) |
 
-专题 App 与数学总库有题目重叠，以上题数不能相加作为独立题目总量。历年题涵盖 2009–2026 年；补充练习单独标记，不冒充真题。
+三个数学专题 App 与数学总库有题目重叠，以上题数不能相加作为独立题目总量。数学历年题涵盖 2009–2026 年；政治含 2009–2026 年真题选择题及 C-Eval、CMMLU 拓展题；补充练习单独标记，不冒充真题。
 
-## 每个分区包含什么
+## 各分区主要内容
 
 - `android/src/`：Android 原生代码；`android/res/`、`AndroidManifest.xml`：图标、样式及应用配置。
 - `android/web/`：HTML/CSS/JavaScript 界面、运行题库 `questions.js`、离线题图与答案图 `images/`。
@@ -43,4 +44,8 @@
 
 ## 私密文件
 
-正式签名私钥及密码、API 密钥、个人作答记录、草稿、解析缓存和本机 SDK 不应提交。首次本地构建会生成新的本地签名，不能代替旧安装包的正式签名；如需覆盖升级旧版本，应使用自己备份的原签名。
+正式签名私钥及密码、API 密钥、个人作答记录、草稿、解析缓存和本机 SDK 不应提交。数学 App 首次本地构建会生成新的本地签名，不能代替旧安装包的正式签名；如需覆盖升级旧版本，应使用自己备份的原签名。
+
+## 政治题库许可
+
+政治题库中的 C-Eval、CMMLU 拓展题按原项目 CC BY-NC-SA 4.0 标注，来源与版本见 [政治来源清单](apps/politics/sources/manifest.json)和[项目说明](apps/politics/README.md)。第三方真题与解析授权情况另行说明，不适用代码的统一授权。

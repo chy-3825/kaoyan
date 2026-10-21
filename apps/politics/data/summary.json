@@ -1,0 +1,24 @@
+{
+  "total": 1500,
+  "withPreanalysis": 1500,
+  "generatedPreanalysis": 1005,
+  "byTopicTag": {
+    "马克思主义基本原理": 375,
+    "思想道德与法治": 340,
+    "毛泽东思想和中国特色社会主义理论体系概论": 278,
+    "中国近现代史纲要": 355,
+    "习近平新时代中国特色社会主义思想概论": 152
+  },
+  "pastExam": 594,
+  "supplement": 906,
+  "supplementSources": {
+    "C-Eval 中文考试评测题库": 406,
+    "CMMLU 中文多任务理解评测（马克思主义理论）": 120,
+    "CMMLU 中文多任务理解评测（法律与道德基础）": 120,
+    "CMMLU 中文多任务理解评测（中国历史）": 100,
+    "CMMLU 中文多任务理解评测（高中政治）": 80,
+    "CMMLU 中文多任务理解评测（中国外交政策）": 80
+  },
+  "generatedWithSpecificRationaleRule": 189,
+  "generatedAnswerHintsNeedSubjectReview": 816
+}

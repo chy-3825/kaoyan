@@ -1,0 +1,1 @@
+PASS: Android 14 emulator; offline wrong answer; mistake saved across force-stop and in-place APK reinstall; correct review answer marked mastered; no crash.

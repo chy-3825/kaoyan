@@ -1,0 +1,25 @@
+Starting: Intent { cmp=com.yanxi.politics/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.yanxi.politics/.MainActivity
+TotalTime: 231
+WaitTime: 233
+Complete
+
+Starting: Intent { cmp=com.yanxi.politics/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.yanxi.politics/.MainActivity
+TotalTime: 338
+WaitTime: 339
+Complete
+
+Starting: Intent { cmp=com.yanxi.politics/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.yanxi.politics/.MainActivity
+TotalTime: 251
+WaitTime: 256
+Complete
+
+PASS: Android 14 / API 34; old crash reproduced; same-signature upgrade; 3 cold launches; training and mistakes UI visible; no app crash.

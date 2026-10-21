@@ -1,0 +1,173 @@
+{
+  "collectedAt": "2026-10-09",
+  "recordFile": "../data/questions.jsonl",
+  "recordCount": 1500,
+  "selectionOnly": true,
+  "sources": [
+    {
+      "id": "past_exam_2009",
+      "type": "past_exam",
+      "recordCount": 33,
+      "years": [
+        2009
+      ],
+      "questionAndAnswerSource": "中国教育在线：2009 年考研政治真题原文及答案解析，分页 1—5。每题只保留选择题题干、四个选项和参考答案。",
+      "urls": [
+        "https://kaoyan.eol.cn/shiti/zhengzhi/201605/t20160516_1398236.shtml",
+        "https://kaoyan.eol.cn/shiti/zhengzhi/201605/t20160516_1398236_1.shtml",
+        "https://kaoyan.eol.cn/shiti/zhengzhi/201605/t20160516_1398236_2.shtml",
+        "https://kaoyan.eol.cn/shiti/zhengzhi/201605/t20160516_1398236_3.shtml",
+        "https://kaoyan.eol.cn/shiti/zhengzhi/201605/t20160516_1398236_4.shtml",
+        "https://www.wendu.com/uploadfile/2017/0823/20170823032317149.pdf"
+      ],
+      "license": "未核实；仅本地个人备考使用"
+    },
+    {
+      "id": "past_exam_2010_2023",
+      "type": "past_exam",
+      "recordCount": 462,
+      "years": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "source": "环球青藤公开提供下载的《2010-2023 考研政治真题解析汇总》资料包。",
+      "url": "https://m.hqqt.com/kaoyan-kaoshi/ziliaolm/1384856.html",
+      "rawFile": "raw/2010-2023.zip",
+      "sha256": "122c04a5e68ce9e8ef845baec195da4ec9049238cd96c7a0efd1f31b4793e63f",
+      "license": "未核实；仅本地个人备考使用"
+    },
+    {
+      "id": "past_exam_2024",
+      "type": "past_exam",
+      "recordCount": 33,
+      "years": [
+        2024
+      ],
+      "questionSource": "郑州工商学院网站发布的 2024 年思想政治理论试卷 PDF。",
+      "questionUrl": "https://xxgcxy.ztbu.edu.cn/attachment/sites/item/2024_11/05_17/caddfaec310365de.pdf",
+      "rawQuestionFile": "raw/papers/2024-official.pdf",
+      "answerSources": [
+        {
+          "range": "1-16 单选",
+          "url": "https://aged-jixun-cdn.iqihang.com/2024/0830/20240830060446466.pdf",
+          "rawFile": "raw/papers/2024-iqihang-partial-answer-key.pdf"
+        },
+        {
+          "range": "17-33 多选",
+          "url": "https://kaoyan.xdf.cn/202312/13554744.html"
+        },
+        {
+          "crossCheck": "中国考研网完整选择题答案表",
+          "url": "https://www.chinakaoyan.com/info/article/id/527483.shtml"
+        }
+      ],
+      "answerReview": "启航 PDF 的 17-22 题与新东方答案表一致；23 题以后存在冲突，因此只采用完整答案表并与中国考研网交叉核对。",
+      "ocrReview": "订正可确认的 OCR 错字：第 11 题“檀香山”、第 27 题“大革命”、第 33 题“宣布”；另清理题目边界处的 OCR 空格和标点。",
+      "license": "题目及第三方答案解析授权未核实；仅本地个人备考使用"
+    },
+    {
+      "id": "past_exam_2025_2026",
+      "type": "past_exam",
+      "recordCount": 66,
+      "years": [
+        2025,
+        2026
+      ],
+      "source": "环球青藤公开提供下载的《2020-2026 考研政治真题解析汇总》资料包。",
+      "url": "https://m.hqqt.com/kaoyan-kaoshi/ziliaolm/1297044.html",
+      "rawFile": "raw/2020-2026.zip",
+      "sha256": "1487cf3381e0ffaf74713d42375e575598d1a33e6e2a43d7cad887a7b8a01e2a",
+      "license": "未核实；仅本地个人备考使用"
+    },
+    {
+      "id": "ceval_supplement",
+      "type": "supplement",
+      "recordCount": 406,
+      "dataset": "C-Eval: A Multi-Level Multi-Discipline Chinese Evaluation Suite for Foundation Models",
+      "datasetCard": "https://huggingface.co/datasets/ceval/ceval-exam",
+      "paper": "https://arxiv.org/abs/2305.08322",
+      "revision": "617524a00b307ff6f9933702f724131fe12ca7ce",
+      "split": "test",
+      "license": "CC BY-NC-SA 4.0",
+      "selectionByConfig": {
+        "ideological_and_moral_cultivation": 102,
+        "mao_zedong_thought": 102,
+        "marxism": 101,
+        "modern_chinese_history": 101
+      },
+      "rawParquetSha256": {
+        "ideological_and_moral_cultivation-test.parquet": "f8290d4c9851bf7b56bd5205144f273eaaa3ddd37b5a7466581769bbcd0caeae",
+        "mao_zedong_thought-test.parquet": "85d790a63f26d5d0f28d2a9cfc9e9c4b2a34136e4e5d6634a6067faec9f5fad2",
+        "marxism-test.parquet": "4b063bf7dba93c55ae6bb0db14f953ef627d9afca5356c8afc4191bbbf701442",
+        "modern_chinese_history-test.parquet": "eb1cbdf6cbd1016f62025be5600b2594a976d0ec8d78575f2f8037f9fa665eb1"
+      },
+      "note": "全部标记为拓展单选题，不标注成考研真题；C-Eval 部分记录没有解析。"
+    },
+    {
+      "id": "cmmlu_supplement",
+      "type": "supplement",
+      "recordCount": 500,
+      "dataset": "CMMLU: Measuring massive multitask language understanding in Chinese",
+      "repository": "haonan-li/CMMLU",
+      "revision": "d6e7b716d8ac694f38969a6c0407437d1fded799",
+      "split": "test",
+      "urls": [
+        "https://github.com/haonan-li/CMMLU",
+        "https://huggingface.co/datasets/haonan-li/cmmlu"
+      ],
+      "license": "CC BY-NC-SA 4.0",
+      "selectionByConfig": {
+        "marxist_theory": 120,
+        "legal_and_moral_basis": 120,
+        "chinese_history": 100,
+        "high_school_politics": 80,
+        "chinese_foreign_policy": 80
+      },
+      "rawFiles": {
+        "chinese_foreign_policy.csv": "f44422c71ad74908a7530e45a502c61d49cc3a1fc8c34968bd45922375f7e345",
+        "chinese_history.csv": "1f7b977f5e3ff67eb5a910c3adce74c725fccb7ab286ef97e266eeffbbc51644",
+        "high_school_politics.csv": "8a24336a0a00fc49d1b88b8a61d0b3e65e3a10cbbd614d2aee49fea31f703cfd",
+        "legal_and_moral_basis.csv": "bb17449ec248520f42dcd239f776c7a9487f8061265d142ac0ff8cf10a3a6ee0",
+        "marxist_theory.csv": "014f1e0fad946d722ce1ee0156dbee66745f60da22a6291462401683f7455786"
+      },
+      "answerCorrections": [
+        {
+          "sourceId": "CMMLU/marxist_theory/test#0",
+          "upstreamAnswer": "D",
+          "bankAnswer": "A",
+          "basis": "The definition is the fusion of bourgeois state power and monopoly capital; independent cross-check against graduate-exam and university teaching references."
+        }
+      ],
+      "note": "Selected and deduplicated supplemental single-choice questions from five CMMLU subject files. These are not graduate-admission past questions. Generated pre-analyses are concise study drafts; check subtle or time-sensitive claims against current course materials."
+    }
+  ],
+  "topicTags": {
+    "available": [
+      "马克思主义基本原理",
+      "思想道德与法治",
+      "毛泽东思想和中国特色社会主义理论体系概论",
+      "中国近现代史纲要",
+      "习近平新时代中国特色社会主义思想概论"
+    ],
+    "counts": {
+      "马克思主义基本原理": 375,
+      "思想道德与法治": 340,
+      "毛泽东思想和中国特色社会主义理论体系概论": 278,
+      "中国近现代史纲要": 355,
+      "习近平新时代中国特色社会主义思想概论": 152
+    },
+    "assignment": "Supplement labels follow source collections; 2023-2026 use question-specific subject mapping; 2009-2022 use topic keywords and the source paper section as fallback for short or cross-topic questions."
+  }
+}

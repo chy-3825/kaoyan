@@ -1,0 +1,35 @@
+{
+  "total": 1500,
+  "sourceProvidedExplanations": 495,
+  "generatedWithSpecificRationaleRule": 189,
+  "generatedAnswerHintsNeedSubjectReview": 816,
+  "invalidAnswerOrMissingExplanation": [],
+  "byCourse": {
+    "中国近现代史纲要": {
+      "specific_rationale": 48,
+      "answer_hint": 206,
+      "source_provided": 101
+    },
+    "习近平新时代中国特色社会主义思想概论": {
+      "source_provided": 78,
+      "specific_rationale": 29,
+      "answer_hint": 45
+    },
+    "思想道德与法治": {
+      "specific_rationale": 56,
+      "answer_hint": 187,
+      "source_provided": 97
+    },
+    "毛泽东思想和中国特色社会主义理论体系概论": {
+      "specific_rationale": 19,
+      "answer_hint": 166,
+      "source_provided": 93
+    },
+    "马克思主义基本原理": {
+      "specific_rationale": 37,
+      "answer_hint": 212,
+      "source_provided": 126
+    }
+  },
+  "note": "A matched rationale rule is a focused draft, not independent expert verification. Answer hints explicitly lack item-specific distractor analysis."
+}

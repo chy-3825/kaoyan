@@ -1,0 +1,3 @@
+1.0.0 Signer #1 certificate SHA-256 digest: 5914d62ef0af7cb3841f54123df1f306a374dd806e100873ec25c9889a86b1aa
+1.0.1 Signer #1 certificate SHA-256 digest: 5914d62ef0af7cb3841f54123df1f306a374dd806e100873ec25c9889a86b1aa
+PASS: same signing certificate; each APK contains 1,000 questions; archive integrity valid.
