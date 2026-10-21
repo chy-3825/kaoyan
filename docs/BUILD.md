@@ -57,3 +57,7 @@ PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源�
 ## 政治 App
 
 政治分区保留原有独立 Web 版本 `app/dist/` 和 Android 版本 `android/web/`，两者功能版本不同，使用 Android 当前题库时以 `android/web/` 为准。构建与环境见 [Android 说明](../apps/politics/android/README.md)；题库重建依赖见其 `requirements.txt` 和根 README。
+
+## 恢复专用工具链
+
+为避免清理本地缓存后丢失原安装步骤，仓库保留了 `scripts/setup_android_sdk.py` 和 `scripts/setup_android_emulator.py`，分别恢复原 Build Tools/平台目录和 Linux x86_64 测试模拟器。需要 Python `requests`，下载目标为 `~/.cache/yanxi-android`，会校验原下载文件的 SHA-1。这些是原有版本的恢复脚本，此次没有重新执行下载测试；下载源和系统兼容性可能发生变化。构建 APK 只需 SDK 脚本，模拟器脚本为可选。
