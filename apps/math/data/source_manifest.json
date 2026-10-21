@@ -1,0 +1,16 @@
+{
+  "questionCount": 1464,
+  "source": "考研数学历年真题图片库；真题墙补充2026元数据与原题图",
+  "questionBankRepo": "https://github.com/lx-ruc/kaoyanshuxue",
+  "sourceSite": "https://zhentiqiang.com/kaoyan/math",
+  "attribution": "2009–2025 metadata, answer keys and question images: lx-ruc/kaoyanshuxue (its README attributes them to 真题墙). 2026 question IDs/index: 真题墙; original question and solution PDF pages: static.kaoyan.cn.",
+  "note": "All 1,224 question images are present. 2026 original papers and solutions were cropped locally. Four older non-choice questions whose source answer scans were unavailable include a short text solution. Source redistribution rights have not been verified; use for personal study only.",
+  "sourcePdfs": [
+    "https://static.kaoyan.cn/file/question/2025/12/27/f3a552ec0d163308d2ac28dc7a10bbd0.pdf",
+    "https://static.kaoyan.cn/file/question/2025/12/27/000fde2e45f4bafcc0bde33b16b8647b.pdf",
+    "https://static.kaoyan.cn/file/question/2025/12/27/f2d851eb315f540c31acc1b434c494c0.pdf"
+  ],
+  "questionPdfHost": "https://static.kaoyan.cn/file/question/2025/12/27/",
+  "supplementalQuestionCount": 240,
+  "supplementalSource": "原创高频考点专题练习；非历年真题，无年份/题号标注。"
+}
