@@ -52,7 +52,7 @@ python3 scripts/build_supplemental.py
 
 PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源可变，重新生成结果不保证与快照相同；2026 裁图问题仍需修复。
 
-高数、概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。更新数学总库不会自动同步到三个专题 App。
+概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。更新数学总库不会自动同步到两个专题 App。
 
 ## 政治 App
 

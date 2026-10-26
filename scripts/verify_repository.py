@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ERRORS = []
-EXPECTED = {'math': 1464, 'calculus': 925, 'probability': 221, 'linear-algebra': 318, 'politics': 1500}
+EXPECTED = {'math': 1464, 'probability': 221, 'linear-algebra': 318, 'politics': 1500}
 
 
 def error(message):
