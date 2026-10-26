@@ -2,6 +2,7 @@
 """Crop the 2026 original-paper PDFs into formula-preserving question/answer images."""
 from __future__ import annotations
 
+import argparse
 import json
 import pathlib
 import re
@@ -9,6 +10,7 @@ import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 
+import pymupdf
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -120,6 +122,17 @@ def get_lines(pdf: pathlib.Path):
                     continue
                 lines.append({"page": page_no, "text": text, "x0": float(line.attrib["xMin"]), "y0": float(line.attrib["yMin"]), "y1": float(line.attrib["yMax"])})
             pages.append({"width": float(page.attrib["width"]), "height": float(page.attrib["height"]), "lines": lines})
+        # Some formulas are embedded bitmap images, invisible to pdftotext.
+        # Include image/path geometry so radicals and plots retain their tops.
+        with pymupdf.open(pdf) as document:
+            for page, source in zip(pages, document):
+                boxes = [im["bbox"] for im in source.get_image_info()]
+                boxes += [tuple(drawing["rect"]) for drawing in source.get_drawings()]
+                page["graphics"] = [
+                    {"x0": x0, "y0": y0, "y1": y1}
+                    for x0, y0, x1, y1 in boxes
+                    if x0 >= 68 and x1 <= 527 and y0 >= 40 and y1 <= 770
+                ]
         return pages
 
 
@@ -149,6 +162,24 @@ def crop_segments(pages, segments, target: pathlib.Path, render_prefix: pathlib.
     return True
 
 
+def marker_top(marker, lines):
+    """Include tall matrices, radicals and superscripts on a marker's text row.
+
+    PDF extraction may list a matrix's first row well above the question number.
+    Grow the row upwards through overlapping glyph boxes rather than assuming a
+    fixed number of points of padding. Apply this to answer rows too, so an
+    answer's numerator does not leak into the question image.
+    """
+    top = marker["y0"]
+    while True:
+        candidate = min([ln["y0"] for ln in lines
+                         if ln["x0"] > 100 and ln["y0"] < marker["y1"] - 1
+                         and ln["y1"] > top + 1] + [top])
+        if candidate == top:
+            return top
+        top = candidate
+
+
 def segments_for(pages):
     result = {"question": {}, "answer": {}}
     active = None
@@ -165,24 +196,27 @@ def segments_for(pages):
         lines = page["lines"]
         if active is not None:
             seg_page, seg_y0 = page_no, 48
-        content_end = max([ln["y1"] for ln in lines if ln["y1"] < 770] or [page["height"] - 70])
-        content_end = min(content_end + 5, 770)
+        # Retain non-text graphics and formulas below the last extracted text line.
+        content_end = min(page["height"] - 70, 770)
         for line in lines:
             txt = line["text"].strip()
             is_q = bool(re.match(r"^(\d{1,2})\s*\.", txt)) and line["x0"] < 120
             qno = int(re.match(r"^(\d{1,2})\s*\.", txt).group(1)) if is_q else 0
             if is_q and 1 <= qno <= 22:
-                add(line["y0"] - 3)
+                formula_top = marker_top(line, lines + page.get("graphics", []))
+                add(formula_top - 3)
                 active, stage = qno, "question"
-                seg_page, seg_y0 = page_no, line["y0"] - 3
+                seg_page, seg_y0 = page_no, formula_top - 3
                 continue
             if active is None:
                 continue
             if "【答案】" in txt or "【解析】" in txt or "【证明】" in txt:
                 if stage == "question":
-                    add(line["y0"] - 20)
+                    # A fixed 20-point subtraction cut entire short fill-in questions away.
+                    answer_top = marker_top(line, lines + page.get("graphics", []))
+                    add(answer_top - 3)
                     stage = "answer"
-                    seg_page, seg_y0 = page_no, line["y0"] - 3
+                    seg_page, seg_y0 = page_no, answer_top - 3
         add(content_end)
         if active is not None:
             seg_page, seg_y0 = page_no + 1, 48
@@ -190,6 +224,9 @@ def segments_for(pages):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--images-only", action="store_true", help="Rebuild images without rewriting reviewed bank metadata")
+    args = parser.parse_args()
     q_by_key = {(q["exam"], q["examYear"], q["questionNo"]): q for q in (json.loads(x) for x in (DATA / "questions.jsonl").read_text(encoding="utf-8").splitlines())}
     for exam, filename in PDFS.items():
         pdf = ROOT / "sources" / "2026" / filename
@@ -226,6 +263,9 @@ def main():
                         raise RuntimeError(f"Could not create answer image for {exam} {no}")
                     row["answerImage"] = f"images/a-{qid}.webp"
                 print(f"{exam} {no:02d}: q={q_img.stat().st_size//1024}KB" + (f" a={(ASSETS/f'a-{qid}.webp').stat().st_size//1024}KB" if no > 10 else ""), flush=True)
+
+    if args.images_only:
+        return
 
     # Fill the few gaps left in the public legacy index, using the bundled
     # original problem image and a short proof/answer in the app.

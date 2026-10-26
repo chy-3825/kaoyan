@@ -1,2 +1,4 @@
 pyarrow>=14
 requests>=2.31
+Pillow>=9.0
+PyMuPDF>=1.24

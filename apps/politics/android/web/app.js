@@ -101,6 +101,7 @@ function ensureTopicPosition(tag) {
 function go(pageName) {
   if (!['home', 'categories', 'training', 'directory', 'mistakes', 'settings'].includes(pageName)) return;
   dialog.close();
+  document.getElementById('question-image-view').close();
   const restoreDialog = document.getElementById('restore-dialog');
   if (restoreDialog.open) restoreDialog.close();
   pendingRestore = null;
@@ -267,7 +268,7 @@ function questionView() {
   const fullHeading = review ? '错题复习' : (state.topicTag || q.topicTag);
   return `<div class="training-screen"><header class="training-head"><button class="back-button" data-action="${backAction}"><span>‹</span>${backLabel}</button><div class="training-course"><span title="${esc(fullHeading)}" aria-label="${esc(fullHeading)}">${esc(heading)}</span>${review ? '' : `<button class="directory-shortcut" data-action="directory" aria-label="打开题目目录"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></button>`}</div></header>
     <div class="question-progress"><span>${index + 1} / ${total}</span><div class="progress-track"><span style="width:${Math.round((index + 1) / total * 100)}%"></span></div></div>
-    <article class="question-card"><div class="question-meta">${meta(q)}</div><h1 class="stem">${esc(q.stem)}</h1><div class="options ${q.questionType}">${Object.entries(q.options).map(([letter, text]) => {
+    <article class="question-card"><div class="question-meta">${meta(q)}</div><h1 class="stem">${esc(q.stem)}</h1>${q.image ? `<figure class="question-figure"><button class="question-figure-button" data-action="zoom-question" aria-label="放大原卷配图"><img class="question-figure-image" src="${esc(q.image)}" alt="${esc(q.imageAlt || '原卷配图')}"></button><figcaption>原卷配图 · 点按放大</figcaption></figure>` : ''}<div class="options ${q.questionType}">${Object.entries(q.options).map(([letter, text]) => {
       const isSelected = choices.includes(letter), correct = answer && q.answer.includes(letter), wrong = answer && isSelected && !q.answer.includes(letter);
       const stateClass = answer ? (correct ? 'correct' : wrong ? 'wrong' : '') : isSelected ? 'selected' : '';
       return `<button class="option ${stateClass}" data-choice="${letter}" aria-pressed="${isSelected}" ${answer ? 'disabled' : ''}><span class="letter">${letter}</span><span class="option-text">${esc(text)}</span><span class="option-state" aria-hidden="true">${answer && correct ? '✓' : answer && wrong ? '×' : isSelected ? '✓' : ''}</span></button>`;
@@ -538,6 +539,8 @@ window.onNativeExplanation = result => {
 window.onApiConfigured = () => { toast('API 设置已保存'); if (dialog.open) renderExplanation(); if (page === 'settings') render(); };
 
 function handleAndroidBack() {
+  const imageView = document.getElementById('question-image-view');
+  if (imageView.open) { imageView.close(); return true; }
   const restoreDialog = document.getElementById('restore-dialog');
   if (restoreDialog.open) { restoreDialog.close(); pendingRestore = null; return true; }
   if (dialog.open) { dialog.close(); return true; }
@@ -561,6 +564,23 @@ document.addEventListener('click', event => {
   if (button.dataset.restore) { state.mistakes[button.dataset.restore].mastered = false; save(); render(); }
   if (button.dataset.master) { const item = state.mistakes[button.dataset.master]; if (item) { item.mastered = true; save(); render(); } }
   switch (button.dataset.action) {
+    case 'zoom-question': {
+      const q = current();
+      if (!q?.image) break;
+      const image = document.getElementById('question-zoom-image');
+      image.onload = () => { image.style.width = `${Math.min(image.naturalWidth, window.innerWidth - 48)}px`; };
+      image.src = q.image;
+      image.alt = q.imageAlt || '原卷配图';
+      document.getElementById('question-image-view').showModal();
+      break;
+    }
+    case 'zoom-figure': {
+      const image = document.getElementById('question-zoom-image');
+      const fit = Math.min(image.naturalWidth, window.innerWidth - 48);
+      image.style.width = `${parseFloat(image.style.width) > fit ? fit : fit * 2}px`;
+      break;
+    }
+    case 'close-question-image': document.getElementById('question-image-view').close(); break;
     case 'home': go('home'); break;
     case 'categories': go('categories'); break;
     case 'mistakes': go('mistakes'); break;
@@ -617,3 +637,14 @@ document.addEventListener('toggle', event => {
 }, true);
 
 render();
+
+// Image errors do not bubble; show a visible message instead of a broken icon.
+document.addEventListener('error', event => {
+  const image = event.target;
+  if (image.matches?.('.question-figure-image')) {
+    const message = document.createElement('p');
+    message.className = 'notice';
+    message.textContent = '原卷配图读取失败，请重新进入题目或更新安装包。';
+    image.closest('figure').replaceWith(message);
+  }
+}, true);

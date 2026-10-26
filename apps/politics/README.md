@@ -51,3 +51,7 @@ python3 scripts/build_bank.py
 重建脚本会读取本地 PDF/Parquet，并重新读取中国教育在线的 2009 年真题分页；随后为每题标注考点标签并更新应用题库。
 
 只刷新离线解析并更新覆盖报告可运行 `python3 scripts/refresh_preanalysis.py`。
+
+## 原卷配图
+
+2010 年第 3 题北极熊照片、2012 年第 4 题漫画已从保存的原卷 PDF 提取到 Android 与 Web 的 `images/`，无需联网加载，支持点按放大。素材来源及提取位置见 `sources/question_images.json`，原题素材授权说明继续适用。重建命令见仓库的 [构建说明](../../docs/BUILD.md)。

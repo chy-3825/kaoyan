@@ -1,0 +1,27 @@
+{
+  "note": "Extract embedded original figures from the bundled source PDFs; do not synthesize exam figures.",
+  "images": [
+    {
+      "id": "K政治-2010-03",
+      "pdf": "sources/raw/papers/2010.pdf",
+      "page": 1,
+      "size": [
+        206,
+        275
+      ],
+      "image": "images/politics-2010-03.webp",
+      "imageAlt": "2010 年政治第 3 题原卷照片"
+    },
+    {
+      "id": "K政治-2012-04",
+      "pdf": "sources/raw/papers/2012.pdf",
+      "page": 1,
+      "size": [
+        392,
+        253
+      ],
+      "image": "images/politics-2012-04.webp",
+      "imageAlt": "2012 年政治第 4 题原卷漫画"
+    }
+  ]
+}

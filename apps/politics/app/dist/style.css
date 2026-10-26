@@ -304,3 +304,14 @@ main{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 @media(min-width:720px){main{padding-top:28px}.home-screen{max-width:510px}.home-hero{height:180px}.hero-art{right:26px;top:7px;width:170px;height:170px}.page-screen{padding-top:10px}.question-card{padding:25px 25px 16px}.question-grid{grid-template-columns:repeat(8,minmax(0,1fr))}.bottom-nav{left:50%;right:auto;width:min(100%,720px);transform:translateX(-50%);padding-left:24px;padding-right:24px}}
 @media(max-width:370px){main{padding-left:14px;padding-right:14px}.home-hero{padding-left:18px;height:155px}.hero-copy h1{font-size:26px}.hero-art{right:-13px;width:145px;height:145px}.question-card{padding:16px 13px 12px}.option{gap:8px;padding:11px 9px}.training-course{font-size:10px}.question-grid{gap:7px}.question-number{min-height:42px}}
 @media(max-height:720px){.home-screen{padding-top:0}.brand-bar{margin-bottom:12px}.home-hero{height:145px}.home-progress{margin-top:12px;margin-bottom:13px}.home-footer{padding-top:11px}}
+
+/* Original-paper figures remain at natural size; tap to inspect. */
+.question-figure{margin:16px 0;text-align:center}
+.question-figure-button{display:inline-block;max-width:100%;padding:0;border:0;background:#fff;cursor:zoom-in}
+.question-figure-image{display:block;max-width:100%;height:auto;margin:auto}
+.question-figure figcaption{margin-top:6px;font-size:12px;color:#687775}
+#question-image-view{width:calc(100vw - 24px);max-width:900px;max-height:90dvh;padding:12px;border:0;border-radius:14px}
+#question-image-view::backdrop{background:#0009}
+.figure-toolbar{display:flex;justify-content:flex-end;gap:12px;margin-bottom:12px}
+.figure-scroll{overflow:auto;max-height:75dvh;text-align:center}
+#question-zoom-image{display:block;height:auto;max-width:none;margin:auto}

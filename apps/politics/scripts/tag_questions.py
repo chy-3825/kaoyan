@@ -85,6 +85,8 @@ def tag_records(rows):
  return counts,rules
 
 def write_outputs(rows):
+ from question_images import attach_images
+ attach_images(rows)
  counts,_=tag_records(rows)
  BANK.write_text(''.join(json.dumps(q,ensure_ascii=False)+'\n' for q in rows),encoding='utf8')
  for out in [ROOT/'app/dist/questions.js',ROOT/'android/web/questions.js']:

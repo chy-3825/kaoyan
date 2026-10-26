@@ -54,9 +54,11 @@ public final class MainActivity extends Activity {
         s.setSupportMultipleWindows(false);s.setJavaScriptCanOpenWindowsAutomatically(false);
         web.setWebViewClient(new WebViewClient(){
             @Override public WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest r){
-                Uri u=r.getUrl();String type=assets.get(u.getPath());
-                if("https".equals(u.getScheme())&&HOST.equals(u.getHost())&&type!=null){
-                    try{return new WebResourceResponse(type,"UTF-8",getAssets().open(u.getPath().substring(1)));}catch(IOException ignored){}
+                Uri u=r.getUrl();String path=u.getPath();String type=assets.get(path);
+                boolean image=path!=null&&path.matches("/images/[a-zA-Z0-9._-]+\\.webp");
+                if("https".equals(u.getScheme())&&HOST.equals(u.getHost())&&(type!=null||image)){
+                    if(image)type="image/webp";
+                    try{return new WebResourceResponse(type,image?null:"UTF-8",getAssets().open(path.substring(1)));}catch(IOException ignored){}
                 }
                 return new WebResourceResponse("text/plain","UTF-8",404,"Not Found",new HashMap<>(),new ByteArrayInputStream(new byte[0]));
             }
