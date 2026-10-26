@@ -35,3 +35,6 @@ tmp-preview/
 .idea/
 .vscode/
 .DS_Store
+
+# User-requested installable APKs; signing material stays excluded.
+!apk/*.apk

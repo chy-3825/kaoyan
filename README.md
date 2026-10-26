@@ -2,6 +2,20 @@
 
 四个独立 Android 离线练习 App 的源码与题库。按课程、章节、考点练习，支持错题本、已有参考答案，以及使用个人 API Key 请求解析。
 
+## 直接下载 APK
+
+以下为 2026-10-26 题图修复版，使用原签名重建；仓库同时保存 APK 和 [SHA-256 校验表](apk/SHA256SUMS)。
+
+| App | 版本 | 下载 |
+| --- | --- | --- |
+| 研习政治 | 1.6.1 | [yanxi-politics-1.6.1.apk](apk/yanxi-politics-1.6.1.apk) |
+| 研习数学 | 1.0.1 | [yanxi-math-1.0.1.apk](apk/yanxi-math-1.0.1.apk) |
+| 研习概率 | 1.0.1 | [yanxi-probability-1.0.1.apk](apk/yanxi-probability-1.0.1.apk) |
+| 研习线代 | 1.1.1 | [yanxi-linear-algebra-1.1.1.apk](apk/yanxi-linear-algebra-1.1.1.apk) |
+
+也可从 [修复版 Release](https://github.com/chy-3825/kaoyan/releases/tag/apk-image-fixes-20261026) 下载。APK 为 Android 26 及以上版本的离线学习题库；政治配图已修复，数学 2026 年题图已重新裁切并同步概率、线代。
+
+
 ## 项目分区
 
 | 分区 | App | 源码题数 | 历年题 / 补充题 | 入口 |
@@ -31,9 +45,9 @@
 
 ## 版本与质量说明
 
-源码目录保存当前本地快照，不含正式签名密钥。历史五个 App 的安装包与 SHA-256 校验表已放在 [Releases 归档](https://github.com/chy-3825/kaoyan/releases/tag/local-apk-archive-20261021)，未重新构建。研习高数独立 App 已移除，高等数学题目仍保留在研习数学总库。数学总库源码已有 1,464 题，早期 1.0.0 APK 只有 1,224 题，两者不要混用为同一数据版本。
+源码目录保存当前快照，不提交签名密钥。四个当前版本的安装包在 [`apk/`](apk/)，历史五个 App 的安装包仍在 [旧版 Release](https://github.com/chy-3825/kaoyan/releases/tag/local-apk-archive-20261021)。研习高数独立 App 已移除，高等数学题目仍保留在研习数学总库。数学总库源码已有 1,464 题，早期 1.0.0 APK 只有 1,224 题，两者不要混用为同一数据版本。
 
-2026-10-26 已补齐政治两道原卷配图、修复并同步数学 2026 年题图裁切，详见[题图修复记录](docs/IMAGE_AUDIT.md)。答案小图过度放大等剩余问题见[问题清单](docs/KNOWN_ISSUES.md)；题库尚未经全部人工审核。
+2026-10-26 已补齐政治两道原卷配图、修复并同步数学 2026 年题图裁切，并生成四个可安装 APK，详见[题图修复记录](docs/IMAGE_AUDIT.md)。答案小图过度放大等剩余问题见[问题清单](docs/KNOWN_ISSUES.md)；题库尚未经全部人工审核。
 
 ## 题库来源与授权说明
 

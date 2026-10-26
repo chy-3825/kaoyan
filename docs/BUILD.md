@@ -23,7 +23,7 @@ cd apps/linear-algebra
 python3 android/build.py
 ```
 
-其他 App 替换目录即可；APK 和 SHA-256 校验文件输出到各 App 根目录。
+其他 App 替换目录即可；APK 和 SHA-256 校验文件输出到各 App 根目录。发布前将四个 APK 复制到仓库根目录的 `apk/`，更新其中的 `SHA256SUMS`，再运行根目录校验；校验会逐文件比较 APK 内嵌 Web 资源与源码。
 首次构建会在其 `android/signing/` 创建本地签名私钥与密码。该目录被忽略，原始正式密钥不在仓库中。
 
 ## 题库检查

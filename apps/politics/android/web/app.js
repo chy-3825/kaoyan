@@ -4,7 +4,7 @@ const bank = window.QUESTIONS;
 const byId = new Map(bank.map(q => [q.id, q]));
 const detailedAnalysisTargets = bank;
 const KEY = 'yanxi-politics-v1';
-const VERSION = '1.6.0';
+const VERSION = '1.6.1';
 const TAGS = [
   '马克思主义基本原理',
   '思想道德与法治',
