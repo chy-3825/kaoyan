@@ -15,7 +15,7 @@ server=ThreadingHTTPServer(('127.0.0.1',0),partial(QuietHandler,directory=str(RO
 threading.Thread(target=server.serve_forever,daemon=True).start()
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path=os.environ.get('BROWSER_EXECUTABLE'),headless=True,args=['--no-sandbox'])
- for name,layout in [('math','android/web'),('probability','android/web'),('linear-algebra','android/web'),('politics','android/web'),('politics','app/dist')]:
+ for name,layout in [('calculus','android/web'),('probability','android/web'),('linear-algebra','android/web'),('politics','android/web'),('politics','app/dist')]:
   page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1)
   errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   url=f'http://127.0.0.1:{server.server_port}/apps/{name}/{layout}/index.html';page.goto(url)
@@ -31,7 +31,7 @@ with sync_playwright() as p:
   }''',refs)
   assert not failures,(name,layout,failures)
   selected=['K政治-2010-03','K政治-2012-04'] if name=='politics' else [q['id'] for q in rows if q.get('examYear')==2026][:1]
-  if name=='math':selected=['M-8-2026-11','M-8-2026-15','M-10-2026-12','M-8-2019-06']
+  if name=='calculus':selected=['M-8-2026-11','M-10-2026-12','M-8-2019-02']
   for id in selected:
    if name=='politics':
     page.evaluate('''id=>{const q=byId.get(id);openQuestion(q.topicTag,byTag(q.topicTag).findIndex(x=>x.id===id));}''',id)
@@ -42,7 +42,7 @@ with sync_playwright() as p:
     page.locator('[data-action="zoom-figure"]').click();assert page.evaluate('handleAndroidBack()')
     assert not page.locator('#question-image-view').evaluate('(el)=>el.open')
    else:
-    page.evaluate('''id=>{const q=byId.get(id);state.exam=q.exam;state.subject=q.subject;openQuestion(questionKey(q),byTopic(q.exam,q.subject,questionKey(q)).findIndex(x=>x.id===id));}''',id)
+    page.evaluate('''id=>{const q=byId.get(id);state.subject=q.subject;const key=questionKey(q);openQuestion(key,byTopic(key,q.subject).findIndex(x=>x.id===id));}''',id)
     page.wait_for_function("document.querySelector('.question-image')?.naturalWidth>0")
     page.screenshot(path=str(ARTIFACTS / f'{name}-{id}.png'),full_page=True)
     page.locator('[data-action="zoom-question"]').click()

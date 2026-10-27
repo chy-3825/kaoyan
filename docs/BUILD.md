@@ -40,10 +40,10 @@ python3 scripts/verify_repository.py
 
 构建现有 APK 不需要此步骤。先保存当前数据再重新生成，以免覆盖已人工修改的题目。
 
-数学总库联网更新依赖：
+原数学题源维护资料的联网更新依赖（正常构建三个 App 不需要）：
 
 ```sh
-cd apps/math
+cd sources/math-bank
 python3 -m pip install -r requirements.txt
 python3 scripts/build_bank.py
 python3 scripts/build_2026_pdfs.py
@@ -52,7 +52,9 @@ python3 scripts/build_supplemental.py
 
 PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源可变，重新生成结果不保证与快照相同；2026 裁图已修复。裁图还依赖 `PyMuPDF` 与 `Pillow`（已列入数学 requirements）。
 
-概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。更新数学总库不会自动同步到两个专题 App。
+高数、概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。维护资料中的完整数学题库不会自动同步题目元数据到三个专题 App。修改题目时按原 ID 更新对应 App 的输入 JSONL，再执行其题库脚本。
+
+拆分完整性检查：`python3 scripts/test_math_split.py`，确认三个 App 完整覆盖原 1,464 题、ID 互不重叠，以及高数题干和答案等内容与题源一致。
 
 ## 政治 App
 
@@ -67,8 +69,8 @@ PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源�
 从仓库根目录运行；只重建图片，不覆盖数学已审核元数据：
 
 ```sh
-python3 -m pip install -r apps/math/requirements.txt
-python3 apps/math/scripts/build_2026_pdfs.py --images-only
+python3 -m pip install -r sources/math-bank/requirements.txt
+python3 sources/math-bank/scripts/build_2026_pdfs.py --images-only
 python3 scripts/sync_math_images.py
 python3 -m pip install -r apps/politics/requirements.txt
 python3 apps/politics/scripts/build_question_images.py
@@ -76,7 +78,7 @@ python3 scripts/verify_repository.py
 python3 scripts/test_question_images.py
 ```
 
-政治配图从已保存 PDF 的内嵌图片无损提取，映射在 `apps/politics/sources/question_images.json`。政治题库重建会重新附加这些图片引用，并检查 Android/Web 两份资源存在。数学图片同步脚本检查题号和路径对应关系，再复制至概率、线代；不会自动修改专题库的题目元数据。
+政治配图从已保存 PDF 的内嵌图片无损提取，映射在 `apps/politics/sources/question_images.json`。政治题库重建会重新附加这些图片引用，并检查 Android/Web 两份资源存在。数学图片同步脚本检查题号和路径对应关系，再复制至高数、概率、线代；不会自动修改专题库的题目元数据。
 
 可选的浏览器检查需要 Playwright 与 Chromium 系浏览器：
 
@@ -86,6 +88,8 @@ python3 -m playwright install chromium
 python3 scripts/check_image_ui.py
 # 使用现有 Chrome/Edge 时：
 BROWSER_EXECUTABLE=/path/to/chrome python3 scripts/check_image_ui.py
+# 高数目录、答题、错题、持久化及备份流程：
+BROWSER_EXECUTABLE=/path/to/chrome python3 scripts/check_calculus_ui.py
 ```
 
 检查会启动本地临时 HTTP 服务，在 390×844 视口加载各题图及答案图，验证题目显示、放大/关闭，并输出截图目录。这不能代替 Android APK 的原生 WebView 实机检查。修复后的源码与资源需要重新打包，历史 Release APK 不会自动更新。

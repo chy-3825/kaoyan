@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('math_crops', ROOT / 'apps/math/scripts/build_2026_pdfs.py')
+spec = importlib.util.spec_from_file_location('math_crops', ROOT / 'sources/math-bank/scripts/build_2026_pdfs.py')
 crops = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(crops)
 
@@ -58,7 +58,7 @@ class CropRegressionTests(unittest.TestCase):
 
 class OfflineImageTests(unittest.TestCase):
     def test_every_referenced_image_decodes_and_subject_copies_match(self):
-        for name in ('math', 'probability', 'linear-algebra', 'politics'):
+        for name in ('calculus', 'probability', 'linear-algebra', 'politics'):
             app = ROOT / 'apps' / name
             rows = [json.loads(line) for line in (app / 'data/questions.jsonl').read_text().splitlines()]
             for q in rows:
@@ -72,8 +72,8 @@ class OfflineImageTests(unittest.TestCase):
                             image.load()
                             self.assertGreater(image.width, 0)
                             self.assertGreater(image.height, 0)
-                        if name in ('probability', 'linear-algebra'):
-                            self.assertEqual(target.read_bytes(), (ROOT / 'apps/math/android/web' / path).read_bytes())
+                        if name in ('calculus', 'probability', 'linear-algebra'):
+                            self.assertEqual(target.read_bytes(), (ROOT / 'sources/math-bank/generated/web' / path).read_bytes())
 
     def test_politics_figures_exist_in_both_runtime_banks(self):
         app = ROOT / 'apps/politics'
