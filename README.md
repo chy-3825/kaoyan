@@ -2,16 +2,18 @@
 
 数学分为研习高数、研习线代、研习概率三个独立 App，另保留研习政治，共四个 Android 离线练习 App。按章节、考点练习，支持错题本、已有参考答案，以及使用个人 API Key 请求解析。
 
+1.3.0 调整三个数学 App 界面：做题页底部固定解析、复制和收藏工具栏；题源可展开；图片选项下只显示 A–D 作答按钮；收藏夹展示题图缩略图，取消收藏后可撤销。首页缩小装饰区，统一线条图标，保留原卷点击放大及绿／红描边自评。
+
 ## 直接下载 APK
 
-当前安装包及 [SHA-256 校验表](apk/SHA256SUMS)如下。2026-10-27 新增独立高数 App，替换数学总库 App；其余三个 App 保持 2026-10-26 题图修复版。
+四个安装包发布于 [2026-10-27 Release](https://github.com/chy-3825/kaoyan/releases/tag/apps-20261027)，附 [SHA-256 校验表](apk/SHA256SUMS)。数学题按原卷图片显示，点图可放大；“复制题目”复制排版文字和选项。每题均有解析：951 题为文字解析，其余 31 题直接查看原卷答案图。数学 App 还支持收藏夹及筛选、收藏练习、字号调整和旧学习记录迁移。主观题使用白底绿框绿字“正确”、白底红框红字“错误”。
 
 | App | 版本 | 下载 |
 | --- | --- | --- |
-| 研习政治 | 1.6.1 | [yanxi-politics-1.6.1.apk](apk/yanxi-politics-1.6.1.apk) |
-| 研习高数 | 1.1.0 | [yanxi-calculus-1.1.0.apk](apk/yanxi-calculus-1.1.0.apk) |
-| 研习概率 | 1.0.1 | [yanxi-probability-1.0.1.apk](apk/yanxi-probability-1.0.1.apk) |
-| 研习线代 | 1.1.1 | [yanxi-linear-algebra-1.1.1.apk](apk/yanxi-linear-algebra-1.1.1.apk) |
+| 研习政治 | 1.7.0 | [下载 APK](https://github.com/chy-3825/kaoyan/releases/download/apps-20261027/yanxi-politics-1.7.0.apk) |
+| 研习高数 | 1.3.0 | [下载 APK](https://github.com/chy-3825/kaoyan/releases/download/apps-20261027/yanxi-calculus-1.3.0.apk) |
+| 研习概率 | 1.3.0 | [下载 APK](https://github.com/chy-3825/kaoyan/releases/download/apps-20261027/yanxi-probability-1.3.0.apk) |
+| 研习线代 | 1.3.0 | [下载 APK](https://github.com/chy-3825/kaoyan/releases/download/apps-20261027/yanxi-linear-algebra-1.3.0.apk) |
 
 APK 适用于 Android 8.0（API 26）及以上版本。高数、线代、概率分别独立安装，数一、数二、数三保留为题源标记。政治配图已修复，数学 2026 年题图沿用已修复裁图。
 
@@ -21,11 +23,11 @@ APK 适用于 Android 8.0（API 26）及以上版本。高数、线代、概率�
 | 分区 | App | 源码题数 | 历年题 / 补充题 | 入口 |
 | --- | --- | ---: | ---: | --- |
 | `apps/politics` | 研习政治 | 1,500 | 594 / 906 | [说明与构建](apps/politics/README.md) |
-| `apps/calculus` | 研习高数 | 925 | 773 / 152 | [说明与构建](apps/calculus/README.md) |
-| `apps/probability` | 研习概率 | 221 | 181 / 40 | [说明与构建](apps/probability/README.md) |
-| `apps/linear-algebra` | 研习线代 | 318 | 270 / 48 | [说明与构建](apps/linear-algebra/README.md) |
+| `apps/calculus` | 研习高数 | 650 | 650 / 0 | [说明与构建](apps/calculus/README.md) |
+| `apps/probability` | 研习概率 | 149 | 149 / 0 | [说明与构建](apps/probability/README.md) |
+| `apps/linear-algebra` | 研习线代 | 183 | 183 / 0 | [说明与构建](apps/linear-algebra/README.md) |
 
-三个数学 App 的题目 ID 互不重叠，共 1,464 题，完整覆盖原数学总库。数学历年题涵盖 2009–2026 年；政治含 2009–2026 年真题选择题及 C-Eval、CMMLU 拓展题；补充练习单独标记，不冒充真题。
+三个数学 App 共 982 道合并后真题，对应原 1,224 条试卷记录；合并 242 条重复记录，所有原 ID、试卷出处及旧答题记录映射均保留。文字解析来自真题资料，部分缺失处已补推导；没有文字解析的题目保留原卷答案图。数一、数二、数三按相同题目合并，题目仍显示原卷图，复制功能使用文字版。政治内容不变。
 
 ## 各分区主要内容
 
@@ -51,7 +53,7 @@ APK 适用于 Android 8.0（API 26）及以上版本。高数、线代、概率�
 
 ## 题库来源与授权说明
 
-历年题目索引、考点、题图及部分参考答案来自 [lx-ruc/kaoyanshuxue](https://github.com/lx-ruc/kaoyanshuxue) 的公开整理资料，其说明提到真题墙；2026 年索引及原卷来源记录在 [来源清单](sources/math-bank/data/source_manifest.json)，包含 `static.kaoyan.cn` 等来源。补充题保留原创专题练习标记。
+历年题目索引、考点、题图及部分参考答案来自 [lx-ruc/kaoyanshuxue](https://github.com/lx-ruc/kaoyanshuxue) 的公开整理资料，其说明提到真题墙；2026 年索引及原卷来源记录在 [来源清单](sources/math-bank/data/source_manifest.json)，包含 `static.kaoyan.cn` 等来源。数学自编补充题已删除。
 
 保留来源信息不等于取得再发行授权；部分第三方题图与解析图的再发行授权尚未确认。代码与第三方题库素材的权利应分别判断。本仓库不以统一开源许可证授予第三方素材的使用权，也不承诺可作商业分发。
 

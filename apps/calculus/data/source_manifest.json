@@ -1,5 +1,5 @@
 {
-  "questionCount": 1464,
+  "questionCount": 773,
   "source": "考研数学历年真题图片库；真题墙补充2026元数据与原题图",
   "questionBankRepo": "https://github.com/lx-ruc/kaoyanshuxue",
   "sourceSite": "https://zhentiqiang.com/kaoyan/math",
@@ -10,7 +10,5 @@
     "https://static.kaoyan.cn/file/question/2025/12/27/000fde2e45f4bafcc0bde33b16b8647b.pdf",
     "https://static.kaoyan.cn/file/question/2025/12/27/f2d851eb315f540c31acc1b434c494c0.pdf"
   ],
-  "questionPdfHost": "https://static.kaoyan.cn/file/question/2025/12/27/",
-  "supplementalQuestionCount": 240,
-  "supplementalSource": "原创高频考点专题练习；非历年真题，无年份/题号标注。"
+  "questionPdfHost": "https://static.kaoyan.cn/file/question/2025/12/27/"
 }

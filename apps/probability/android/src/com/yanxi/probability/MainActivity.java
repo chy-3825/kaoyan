@@ -33,7 +33,70 @@ public final class MainActivity extends Activity {
     @Override public void onCreate(Bundle saved) {
         super.onCreate(saved);
         assets.put("/index.html","text/html"); assets.put("/style.css","text/css");
-        assets.put("/app.js","application/javascript"); assets.put("/questions.js","application/javascript");
+        assets.put("/app.js","application/javascript");
+        assets.put("/study-ui.js","application/javascript"); assets.put("/study-ui.css","text/css");
+        assets.put("/vendor/katex/katex.min.js","application/javascript"); assets.put("/vendor/katex/katex.min.css","text/css");
+        assets.put("/vendor/katex/fonts/KaTeX_AMS-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_AMS-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_AMS-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Bold.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Bold.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Bold.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Bold.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Bold.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-BoldItalic.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Italic.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Italic.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Italic.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Main-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-BoldItalic.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-Italic.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-Italic.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Math-Italic.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Bold.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Italic.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Script-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Script-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Script-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Size1-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Size1-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Size1-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Size2-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Size2-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Size2-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Size3-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Size3-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Size3-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Size4-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Size4-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Size4-Regular.woff2","font/woff2");
+        assets.put("/vendor/katex/fonts/KaTeX_Typewriter-Regular.ttf","font/ttf");
+        assets.put("/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff","font/woff");
+        assets.put("/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2","font/woff2");
+ assets.put("/questions.js","application/javascript");
         FrameLayout root=new FrameLayout(this);
         root.setBackgroundColor(Color.rgb(245,245,250));
         root.setOnApplyWindowInsetsListener((view,insets)->{
@@ -55,7 +118,7 @@ public final class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient(){
             @Override public WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest r){
                 Uri u=r.getUrl();String path=u.getPath();String type=assets.get(path);
-                boolean image=path!=null&&path.matches("/images/[a-zA-Z0-9._-]+\\.webp");
+                boolean image=path!=null&&path.matches("/images/(?:[a-zA-Z0-9._-]+/)*[a-zA-Z0-9._-]+\\.webp");
                 if("https".equals(u.getScheme())&&HOST.equals(u.getHost())&&(type!=null||image)){
                     if(image)type="image/webp";
                     try{return new WebResourceResponse(type,image?null:"UTF-8",getAssets().open(path.substring(1)));}catch(IOException ignored){}

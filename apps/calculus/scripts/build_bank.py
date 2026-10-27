@@ -4,6 +4,11 @@ import json
 from collections import Counter
 from pathlib import Path
 
+if __name__ == '__main__':
+    import runpy
+    runpy.run_path(str(Path(__file__).resolve().parents[3] / 'scripts/build_math_study.py'))['build']('calculus')
+    raise SystemExit
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'data'
 WEB = ROOT / 'android/web'
@@ -32,14 +37,11 @@ def write_rows(path, rows):
 
 
 def main():
-    groups = []
-    for filename, expected, supplemental in [('past_questions.jsonl', 773, False), ('supplemental_questions.jsonl', 152, True)]:
-        rows = [normalize(json.loads(line)) for line in (DATA / filename).read_text().splitlines() if line.strip()]
-        if len(rows) != expected or any(q['subject'] != '高等数学' or bool(q.get('isSupplemental')) != supplemental for q in rows):
-            raise SystemExit(f'{filename}: expected {expected} calculus questions with correct source labels')
-        groups.append(rows)
-    past, supplemental = groups
-    rows = sorted(past + supplemental, key=lambda q: (CHAPTERS.index(q['chapter']), q['topic'], q.get('examYear') or 9999, EXAMS.index(q['exam']), q.get('questionNo') or 9999, q['id']))
+    past = [normalize(json.loads(line)) for line in (DATA / 'past_questions.jsonl').read_text().splitlines() if line.strip()]
+    if len(past) != 773 or any(q['subject'] != '高等数学' or q.get('isSupplemental') for q in past):
+        raise SystemExit('Expected exactly 773 past exam calculus questions; supplemental questions are not allowed')
+    supplemental = []
+    rows = sorted(past, key=lambda q: (CHAPTERS.index(q['chapter']), q['topic'], q.get('examYear') or 9999, EXAMS.index(q['exam']), q.get('questionNo') or 9999, q['id']))
     if len({q['id'] for q in rows}) != len(rows):
         raise SystemExit('Duplicate question IDs')
     for q in rows:
@@ -62,10 +64,10 @@ def main():
     for exam in EXAMS:
         if {q['examYear'] for q in past if q['exam'] == exam} != set(range(2009, 2027)):
             raise SystemExit(f'Missing exam years: {exam}')
-    for filename, values in [('past_questions.jsonl', past), ('supplemental_questions.jsonl', supplemental), ('questions.jsonl', rows)]:
+    for filename, values in [('past_questions.jsonl', past), ('questions.jsonl', rows)]:
         write_rows(DATA / filename, values)
     (WEB / 'questions.js').write_text('window.QUESTIONS=' + json.dumps(rows, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
-    summary = {'total': len(rows), 'pastExam': len(past), 'supplemental': len(supplemental), 'byExam': dict(Counter(q['exam'] for q in rows)), 'pastByExam': dict(Counter(q['exam'] for q in past)), 'supplementalByExam': dict(Counter(q['exam'] for q in supplemental)), 'byChapter': dict(Counter(q['chapter'] for q in rows)), 'types': dict(Counter(q['questionType'] for q in rows)), 'note': '数学一、二、三全部高等数学题，保留原题 ID、题源、答案和难度；章节名称统一，补充练习单独标记。'}
+    summary = {'total': len(rows), 'pastExam': len(past), 'supplemental': 0, 'byExam': dict(Counter(q['exam'] for q in rows)), 'pastByExam': dict(Counter(q['exam'] for q in past)), 'supplementalByExam': {}, 'byChapter': dict(Counter(q['chapter'] for q in rows)), 'types': dict(Counter(q['questionType'] for q in rows)), 'note': '仅包含数学一、二、三高等数学历年真题，保留原题 ID、题源、答案和难度。'}
     (DATA / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'calculus: {len(rows)} questions ({len(past)} past + {len(supplemental)} supplemental), {len(CHAPTERS)} chapters')
 

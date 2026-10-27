@@ -2,13 +2,18 @@
 """Validate, order, and package this app's complete standalone question bank."""
 import collections, json
 from pathlib import Path
+
+if __name__ == '__main__':
+    import runpy
+    runpy.run_path(str(Path(__file__).resolve().parents[3] / 'scripts/build_math_study.py'))['build']('probability')
+    raise SystemExit
 ROOT=Path(__file__).resolve().parents[1]
 DATA=ROOT/"data"
 WEB=ROOT/"android"/"web"
 SOURCE=DATA/"questions.jsonl"
 OUTPUT=WEB/"questions.js"
 SUBJECT='概率论与数理统计'
-EXPECTED=221
+EXPECTED=181
 CHAPTER_ORDER=['随机事件和概率', '随机变量及其分布', '多维随机变量及其分布', '随机变量的数字特征', '大数定律和中心极限定理', '数理统计的基本概念', '参数估计与假设检验']
 TOPIC_ORDER={'随机事件和概率': ['随机事件和概率'], '随机变量及其分布': ['随机变量及其分布', '离散型随机变量的条件概率', '离散分布的条件尾概率', '随机切分长度的分布变换', '独立连续随机变量的乘积概率', '线性变换的期望与方差'], '多维随机变量及其分布': ['二维随机变量及其分布', '边缘分布与条件分布', '二元正态分布的混合矩'], '随机变量的数字特征': ['数学期望与方差', '独立泊松变量的混合矩', '独立随机变量函数的相关系数', '协方差与相关系数', '独立性与协方差', '正态分布下平方损失的最小化'], '大数定律和中心极限定理': ['大数定律和中心极限定理'], '数理统计的基本概念': ['数理统计的基本概念'], '参数估计与假设检验': ['矩估计和最大似然估计', '参数估计', '参数的矩估计与极大似然估计', '指数分布次序统计量与极大似然估计', '无偏估计量的构造', '估计量的无偏性', '区间估计和置信区间', '假设检验']}
 EXAMS=("数学一","数学二","数学三")
@@ -24,6 +29,7 @@ def main():
     if any(q.get("chapter") not in CHAPTER_ORDER for q in rows):
         raise SystemExit("Question bank contains a chapter missing from the textbook order")
     for q in rows:
+        if q.get('isSupplemental') or not (2009 <= q.get('examYear', 0) <= 2026 and q.get('questionNo')): raise SystemExit(f"Only past exam questions are allowed: {q['id']}")
         if q.get("exam") not in EXAMS: raise SystemExit(f"Unexpected exam for {q['id']}: {q.get('exam')}")
         if q.get("questionType") not in {"single","fill","solve"}: raise SystemExit(f"Unknown type: {q['id']}")
         if not (q.get("image") or q.get("questionText")): raise SystemExit(f"Missing prompt: {q['id']}")

@@ -34,8 +34,9 @@ public final class MainActivity extends Activity {
         super.onCreate(saved);
         assets.put("/index.html","text/html"); assets.put("/style.css","text/css");
         assets.put("/app.js","application/javascript"); assets.put("/questions.js","application/javascript");
+        assets.put("/design.js","application/javascript"); assets.put("/design.css","text/css");
         FrameLayout root=new FrameLayout(this);
-        root.setBackgroundColor(Color.rgb(247,245,240));
+        root.setBackgroundColor(Color.rgb(244,246,247));
         root.setOnApplyWindowInsetsListener((view,insets)->{
             if(Build.VERSION.SDK_INT>=30){android.graphics.Insets i=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());view.setPadding(i.left,i.top,i.right,i.bottom);}
             else{view.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());}
@@ -44,7 +45,7 @@ public final class MainActivity extends Activity {
         if(Build.VERSION.SDK_INT>=30){getWindow().setDecorFitsSystemWindows(false);}
         else getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR|View.SYSTEM_UI_FLAG_LAYOUT_STABLE|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         web=new WebView(this);
-        web.setBackgroundColor(Color.rgb(247,245,240));
+        web.setBackgroundColor(Color.rgb(244,246,247));
         bridge=new StudyBridge(this,web);
         web.addJavascriptInterface(bridge,"AndroidApp");
         WebSettings s=web.getSettings();

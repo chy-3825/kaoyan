@@ -147,7 +147,7 @@ main{width:100%;max-width:740px;margin:auto;padding:18px 18px calc(108px + env(s
 .answer-text{margin:7px 0 10px;padding:10px 11px;border-radius:9px;background:#fff;color:#4f5b58;font-size:11px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
 .self-assess{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .self-assess button{min-height:39px;border-radius:10px;font-size:11px;font-weight:600}
-.self-correct{background:#e8f3eb;color:#3a8064}.self-wrong{background:#f9eae8;color:#ac4b45}
+.self-correct{background:#2e7d32;color:#fff}.self-wrong{background:#c62828;color:#fff}
 .question-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 1px 0;padding-top:11px;border-top:1px solid #eef1ef}
 .tool-button{min-height:42px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid #e5e4ef;border-radius:11px;background:#fbfbfe;color:#526562;font-size:11px;font-weight:600}
 .tool-button:first-child{color:var(--teal-dark);background:#f1f0fa;border-color:#e5e3f2}

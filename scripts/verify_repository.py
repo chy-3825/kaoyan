@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ERRORS = []
-EXPECTED = {'calculus': 925, 'probability': 221, 'linear-algebra': 318, 'politics': 1500}
+EXPECTED = {'calculus': 650, 'probability': 149, 'linear-algebra': 183, 'politics': 1500}
 PUBLIC_APKS = {}
 for name in EXPECTED:
     manifest = ET.parse(ROOT / 'apps' / name / 'android/AndroidManifest.xml').getroot()
@@ -40,6 +40,8 @@ for name, expected in EXPECTED.items():
         error(f'{name}: source and runtime banks differ')
     refs = 0
     for q in rows:
+        if name != 'politics' and (q.get('isSupplemental') or not q.get('examYear') or not q.get('questionNo')):
+            error(f"{name}/{q['id']}: only past exam questions are allowed")
         if not (q.get('image') or q.get('questionText') or q.get('question') or q.get('stem')):
             error(f"{name}/{q['id']}: missing prompt")
         for key in ('image', 'answerImage'):
@@ -63,6 +65,8 @@ forbidden_suffixes = {'.jks', '.keystore', '.p12', '.pfx', '.pem', '.key', '.apk
 secret_patterns = [r'\bsk-[A-Za-z0-9_-]{20,}', r'\bgh[pousr]_[A-Za-z0-9]{30,}', r'\bgithub_pat_[A-Za-z0-9_]{30,}', r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']
 for relative in filter(None, tracked):
     path = ROOT / relative
+    if not path.is_file():
+        continue  # Tracked files deleted in the working tree are not upload candidates.
     if (path.suffix.lower() in forbidden_suffixes and relative not in PUBLIC_APKS) or 'signing' in path.parts or 'build' in path.parts or path.name in {'password', '.env', 'credentials.json', 'secrets.json'}:
         error(f'forbidden upload: {relative}')
     if path.suffix.lower() in {'.py', '.js', '.json', '.jsonl', '.md', '.txt', '.xml', '.html', '.css', '.properties', '.env'}:

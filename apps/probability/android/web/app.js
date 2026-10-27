@@ -86,14 +86,14 @@ state = {
   hints: state.hints && typeof state.hints === 'object' ? state.hints : {},
   explanationCache: state.explanationCache && typeof state.explanationCache === 'object' ? state.explanationCache : {}
 };
+state = StudyUI.migrate(state, bank);
+StudyUI.applyFont();
 for (const [id, item] of Object.entries(state.explanationCache || {})) aiResults.set(id, item);
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 }[c]));
-const examSource = q => q.isSupplemental
-  ? `专题练习 · ${EXAM_SHORT[q.exam] || q.exam} · ${q.id.match(/-(\d+-\d+)$/)?.[1] || '补充题'}`
-  : [EXAM_SHORT[q.exam] || q.exam, q.examYear, q.questionNo ? `${q.questionNo}题` : ''].filter(Boolean).join(' · ');
+const examSource = q => StudyUI.sourceLabel(q);
 const questionKey = q => `${q.subject}::${q.topicPath || `${q.chapter}::${q.topic}`}`;
 const cursorKey = () => `${state.subject}::${state.topicKey}`;
 
@@ -281,7 +281,7 @@ function markSelf(correct) {
   if (!correct) addMistake(q, response);
   else if (state.mistakes[q.id]) {
     state.mistakes[q.id].mastered = true;
-    if (review) {
+    if (review && review.kind !== 'favorites') {
       review.ids.splice(review.index, 1);
       if (!review.ids.length) { save(); go('mistakes'); return; }
       review.index = Math.min(review.index, review.ids.length - 1);
@@ -296,7 +296,7 @@ function markMastered() {
   if (!q || !state.mistakes[q.id]) return;
   state.mistakes[q.id].mastered = true;
   save();
-  if (review) {
+  if (review && review.kind !== 'favorites') {
     review.ids.splice(review.index, 1);
     if (!review.ids.length) { go('mistakes'); return; }
     review.index = Math.min(review.index, review.ids.length - 1);
@@ -319,7 +319,7 @@ function move(delta) {
   const list = activeList(), next = activeIndex() + delta;
   if (next < 0) return;
   if (next >= list.length) {
-    if (review) go('mistakes');
+    if (review) go(review.kind === 'favorites' ? 'favorites' : 'mistakes');
     return;
   }
   if (review) review.index = next;
@@ -352,7 +352,7 @@ function homeView() {
     <section class="math-hero" aria-hidden="true"><div class="hero-graph"><svg viewBox="0 0 210 130"><path d="M24 100H194M39 111V18M42 99C67 98 75 44 105 30C136 43 144 98 181 99"/><path d="M105 31V100" stroke-dasharray="4 7"/></svg></div><span class="hero-grid"></span></section>
     <button class="continue-card" data-action="continue"><span class="continue-icon"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z"/></svg></span><span class="continue-copy"><strong>${title}</strong>${context ? `<small>${esc(context)}</small>` : ''}</span><span class="continue-chevron">›</span></button>
     ${done ? `<section class="home-progress"><div class="progress-heading"><span>已练 ${done} / ${bank.length}</span><small>${pct}%</small></div><div class="progress-track"><span style="width:${pct}%"></span></div></section>` : ''}
-    <div class="home-actions"><button class="home-action" data-action="directory"><span class="action-symbol course-symbol"><svg viewBox="0 0 24 24"><path d="M4 5.5h6.5A2.5 2.5 0 0 1 13 8v11H6.5A2.5 2.5 0 0 0 4 21zM20 5.5h-4A3 3 0 0 0 13 8v11h4.5A2.5 2.5 0 0 1 20 21z"/></svg></span><strong>考点目录</strong><span class="action-arrow">›</span></button><button class="home-action" data-action="mistakes"><span class="action-symbol mistake-symbol"><svg viewBox="0 0 24 24"><path d="M6 4.5h12a2 2 0 0 1 2 2v13l-4-2.5-4 2.5-4-2.5-4 2.5v-13a2 2 0 0 1 2-2Z"/><path d="M9 9h6M9 13h6"/></svg></span><strong>错题本</strong><span class="action-count">${mistakes}</span><span class="action-arrow">›</span></button></div>
+    <div class="home-actions"><button class="home-action" data-action="favorites"><span class="action-symbol">☆</span><strong>收藏夹</strong><span class="action-count">${Object.keys(state.favorites || {}).length}</span><span class="action-arrow">›</span></button><button class="home-action" data-action="directory"><span class="action-symbol course-symbol"><svg viewBox="0 0 24 24"><path d="M4 5.5h6.5A2.5 2.5 0 0 1 13 8v11H6.5A2.5 2.5 0 0 0 4 21zM20 5.5h-4A3 3 0 0 0 13 8v11h4.5A2.5 2.5 0 0 1 20 21z"/></svg></span><strong>考点目录</strong><span class="action-arrow">›</span></button><button class="home-action" data-action="mistakes"><span class="action-symbol mistake-symbol"><svg viewBox="0 0 24 24"><path d="M6 4.5h12a2 2 0 0 1 2 2v13l-4-2.5-4 2.5-4-2.5-4 2.5v-13a2 2 0 0 1 2-2Z"/><path d="M9 9h6M9 13h6"/></svg></span><strong>错题本</strong><span class="action-count">${mistakes}</span><span class="action-arrow">›</span></button></div>
   </section>`;
 }
 
@@ -420,10 +420,10 @@ function questionView() {
   const correct = attempt?.correct;
   const showAnswer = Boolean(state.revealed[q.id]);
   const source = examSource(q);
-  const options = q.questionType === 'single' && q.options && Object.keys(q.options).length ? `<div class="written-options" aria-label="选择答案">${['A','B','C','D'].map(letter => {
+  const options = !q.image && q.questionType === 'single' && (q.textOptions || q.options) && Object.keys((q.textOptions || q.options)).length ? `<div class="written-options" aria-label="选择答案">${['A','B','C','D'].map(letter => {
     const selected = attempt?.answer === letter, right = q.answer === letter;
     const cls = attempt ? (right ? 'correct' : selected ? 'wrong' : '') : '';
-    return `<button class="written-option ${cls} ${selected?'selected':''}" data-choice="${letter}" ${attempt?'disabled':''}><strong>${letter}</strong><span>${esc(q.options[letter] || '')}</span></button>`;
+    return `<button class="written-option ${cls} ${selected?'selected':''}" data-choice="${letter}" ${attempt?'disabled':''}><strong>${letter}</strong><span>${StudyUI.rich((q.textOptions || q.options)[letter] || '')}</span></button>`;
   }).join('')}</div>` : q.questionType === 'single' ? `<div class="choice-row" aria-label="选择答案">${['A','B','C','D'].map(letter => {
     const selected = attempt?.answer === letter, right = q.answer === letter;
     const cls = attempt ? (right ? 'correct' : selected ? 'wrong' : '') : '';
@@ -431,23 +431,22 @@ function questionView() {
   }).join('')}</div>` : '';
   const fill = q.questionType === 'fill' && !attempt ? `<label class="answer-input-label" for="fill-answer">你的答案</label><input id="fill-answer" class="answer-input" value="${esc(state.drafts[q.id] || '')}" placeholder="写下你的答案" autocomplete="off">` : '';
   const responseAction = q.questionType !== 'single' && !showAnswer && !attempt
-    ? `<button class="primary response-submit" data-action="reveal">${q.questionType==='fill'?'核对答案':'完成作答 · 查看答案'}</button>` : '';
-  const answerContent = showAnswer ? `<section class="answer-panel"><div class="answer-heading">${q.answer ? `<span>参考答案　<strong>${esc(q.answer)}</strong></span>` : '<span>参考答案</span>'}</div>${q.answerText ? `<div class="answer-text">${esc(q.answerText)}</div>` : ''}${q.answerImage ? `<img class="answer-image" src="${esc(q.answerImage)}" loading="lazy" alt="第 ${q.questionNo} 题参考答案" data-action="zoom-answer">` : (!q.answer && !q.answerText ? '<p class="answer-unavailable">暂无离线参考答案，可用 DeepSeek 看题解析。</p>' : '')}${q.questionType === 'single' ? '' : `<div class="self-assess"><button class="self-correct" data-action="self-correct">我已掌握</button><button class="self-wrong" data-action="self-wrong">还需重练</button></div>`}</section>` : '';
-  const answerLabel = q.questionType === 'single' && q.options ? `${q.answer} · ${q.options[q.answer] || ''}` : q.answer;
-  const result = q.questionType === 'single' && attempt ? `<div class="result ${correct===true?'correct':correct===false?'wrong':'unknown'}"><strong>${correct===true?'回答正确':correct===false?'回答错误 · 已加入错题本':'答案待核对'}</strong><span>${q.answer?`参考答案：${esc(answerLabel)}`:'可查看解析或自我核对'}</span>${q.answerText||q.answerImage?`<button class="answer-toggle" data-action="toggle-answer">${showAnswer?'收起参考解析':'查看参考解析'}</button>`:''}${correct===null?'<div class="self-assess"><button class="self-correct" data-action="self-correct">我答对了</button><button class="self-wrong" data-action="self-wrong">还需重练</button></div>':''}${correct===true&&state.mistakes[q.id]&&!state.mistakes[q.id].mastered?'<button class="master-button" data-action="mastered">标记已掌握</button>':''}</div>` : '';
+    ? `<button class="primary response-submit" data-action="reveal">查看答案与解析</button>` : '';
+  const answerContent = showAnswer ? `<section class="answer-panel"><div class="answer-heading">参考答案 ${esc(q.answer || '')}</div>${StudyUI.reference(q)}${q.questionType === 'single' ? '' : `<div class="self-assess"><button class="self-correct" data-action="self-correct">正确</button><button class="self-wrong" data-action="self-wrong">错误</button></div>`}</section>` : '';
+  const answerLabel = q.questionType === 'single' && (q.textOptions || q.options) ? `${q.answer} · ${(q.textOptions || q.options)[q.answer] || ''}` : q.answer;
+  const result = q.questionType === 'single' && attempt ? `<div class="result ${correct===true?'correct':correct===false?'wrong':'unknown'}"><strong>${correct===true?'回答正确':correct===false?'回答错误 · 已加入错题本':'答案待核对'}</strong><span>${q.answer?`参考答案：${StudyUI.rich(answerLabel)}`:'可查看解析或自我核对'}</span>${q.analysisRich||q.answerRich||q.answerText||q.answerImage?`<button class="answer-toggle" data-action="toggle-answer">${showAnswer?'收起参考解析':'查看参考解析'}</button>`:''}${correct===null?'<div class="self-assess"><button class="self-correct" data-action="self-correct">正确</button><button class="self-wrong" data-action="self-wrong">错误</button></div>':''}${correct===true&&state.mistakes[q.id]&&!state.mistakes[q.id].mastered?'<button class="master-button" data-action="mastered">标记已掌握</button>':''}</div>` : '';
   const mistakeItem = state.mistakes[q.id];
   const manualSaved = mistakeItem?.manual && !mistakeItem.mastered;
   const mistakeButton = q.questionType === 'solve' ? `<button class="mistake-toggle ${manualSaved ? 'saved' : ''}" data-action="toggle-manual-mistake" ${!manualSaved && mistakeItem && !mistakeItem.mastered && mistakeItem.count > 0 ? 'disabled' : ''}>${manualSaved ? (mistakeItem.count ? '已加入错题本 · 撤销主动标记' : '已加入错题本 · 撤销') : mistakeItem && !mistakeItem.mastered ? '已因答错收录' : mistakeItem?.mastered ? '重新加入错题本' : '加入错题本'}</button>` : '';
-  const backAction = review ? 'mistakes' : 'topicQuestions';
-  const backLabel = review ? '错题本' : '题目列表';
-  const heading = review ? '错题复习' : `${SUBJECT_SHORT[q.subject] || q.subject} · ${q.topic}`;
+  const backAction = review ? (review.kind === 'favorites' ? 'favorites' : 'mistakes') : 'topicQuestions';
+  const backLabel = review ? (review.kind === 'favorites' ? '收藏夹' : '错题本') : '题目列表';
+  const heading = review ? (review.kind === 'favorites' ? '收藏练习' : '错题复习') : `${SUBJECT_SHORT[q.subject] || q.subject} · ${q.topic}`;
   return `<div class="training-screen"><header class="training-head"><button class="back-button" data-action="${backAction}"><span>‹</span>${backLabel}</button><div class="training-course"><span>${esc(heading)}</span><button class="directory-shortcut" data-action="topicQuestions" aria-label="打开本考点题目列表"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></button></div></header>
     <div class="question-progress"><span>${index + 1} / ${list.length}</span><div class="progress-track"><span style="width:${Math.round((index + 1) / Math.max(1,list.length) * 100)}%"></span></div></div>
-    <article class="question-card"><div class="question-meta"><strong>${esc(source)}</strong><span>${type}</span>${rating(q.difficulty)}</div><div class="question-topic">${esc(q.topic)}</div><button class="hint-toggle" data-action="hint">${state.hints[q.id]?'收起考点提示':'查看考点提示'}　${state.hints[q.id]?'⌃':'⌄'}</button>${state.hints[q.id]?`<div class="study-hint">${esc(q.studyTip || `围绕“${q.topic}”识别题目条件，选用对应定义、定理或公式推导；注意检验适用条件并回代核对。`)}</div>`:''}
-      ${q.image ? `<button class="question-image-button" data-action="zoom-question"><img class="question-image" src="${esc(q.image)}" alt="${esc(`${source} ${type}`)}" fetchpriority="high"></button>` : q.questionText ? `<div class="text-question">${esc(q.questionText)}</div>` : `<div class="missing-question">原题图片暂不可用 <a href="${esc(q.sourceUrl)}">查看来源</a></div>`}
+    <article class="question-card">${StudyUI.meta(q)}<div class="question-topic">${esc(q.topic)}</div><button class="hint-toggle" data-action="hint">${state.hints[q.id]?'收起考点提示':'查看考点提示'}　${state.hints[q.id]?'⌃':'⌄'}</button>${state.hints[q.id]?`<div class="study-hint">${esc(q.studyTip || `围绕“${q.topic}”识别题目条件，选用对应定义、定理或公式推导；注意检验适用条件并回代核对。`)}</div>`:''}
+      ${StudyUI.question(q)}
       ${options}${fill}${responseAction}${result}${answerContent}${mistakeButton}
-      <div class="question-tools"><button class="tool-button" data-action="explain"><span class="tool-icon">✳</span>DeepSeek 解析</button><button class="tool-button" data-action="share"><span class="tool-icon">${q.isSupplemental?'▣':'↗'}</span>${q.isSupplemental?'复制整题':'分享原题图'}</button></div>
-    </article><nav class="bottom-nav"><button class="secondary" data-action="previous" ${index===0?'disabled':''}>上一题</button><button class="primary" data-action="next" ${index===list.length-1?'disabled':''}>下一题</button></nav></div>`;
+    </article>${StudyUI.dock(q,index,list.length)}</div>`;
 }
 
 function mistakesView() {
@@ -467,9 +466,8 @@ function mistakesView() {
 }
 
 function settingsView() {
-  const supplemental = bank.filter(q => q.isSupplemental).length;
-  const past = bank.length - supplemental;
-  return `<div class="page-screen"><header class="page-header"><button class="back-button" data-action="home"><span>‹</span>首页</button></header><div class="page-intro"><h1>设置</h1></div><section class="settings-card"><div class="settings-row"><span><strong>DeepSeek 解析</strong><small>逐步讲解题目，使用你自己的 API Key</small></span><button class="secondary" data-action="configure">配置</button></div><p class="settings-note">历年真题保留原卷图，专题练习以文字呈现。无需配置 API，也可以离线训练、查看答案和记录错题。</p></section><section class="settings-card"><div class="settings-row"><span><strong>题库</strong><small>完整概率题库 · 按教材顺序编排</small></span><span class="settings-count">${bank.length} 题</span></div><div class="settings-row"><span><strong>历年真题</strong><small>来源与授权说明见项目 README</small></span><span class="settings-count">${past} 题</span></div><div class="settings-row"><span><strong>专题练习</strong><small>补充练习，不作为历年真题</small></span><span class="settings-count">${supplemental} 题</span></div></section><section class="settings-card backup-card"><div class="settings-row"><span><strong>学习记录备份</strong><small>包含答题进度、错题、草稿和解析缓存，不含 API Key</small></span></div><div class="backup-actions"><button class="secondary" data-action="export-backup">导出备份</button><button class="secondary" data-action="import-backup">导入备份</button></div>${confirmImport ? `<div class="backup-confirm"><p>导入后会替换本机现有学习记录。</p><div class="backup-actions"><button class="primary" data-action="confirm-import-backup">选择备份文件</button><button class="secondary" data-action="cancel-import-backup">取消</button></div></div>` : ''}</section><button class="text-button settings-link" data-action="home">返回首页</button></div>`;
+  const past = bank.length;
+  return `<div class="page-screen"><header class="page-header"><button class="back-button" data-action="home"><span>‹</span>首页</button></header><div class="page-intro"><h1>设置</h1></div>${StudyUI.readingSettings()}<section class="settings-card"><div class="settings-row"><span><strong>DeepSeek 解析</strong><small>逐步讲解题目，使用你自己的 API Key</small></span><button class="secondary" data-action="configure">配置</button></div><p class="settings-note">仅收录历年真题，保留原卷图。无需配置 API，也可以离线训练、查看答案和记录错题。</p></section><section class="settings-card"><div class="settings-row"><span><strong>题库</strong><small>完整概率题库 · 按教材顺序编排</small></span><span class="settings-count">${bank.length} 题</span></div><div class="settings-row"><span><strong>历年真题</strong><small>来源与授权说明见项目 README</small></span><span class="settings-count">${past} 题</span></div></section><section class="settings-card backup-card"><div class="settings-row"><span><strong>学习记录备份</strong><small>包含答题进度、错题、草稿和解析缓存，不含 API Key</small></span></div><div class="backup-actions"><button class="secondary" data-action="export-backup">导出备份</button><button class="secondary" data-action="import-backup">导入备份</button></div>${confirmImport ? `<div class="backup-confirm"><p>导入后会替换本机现有学习记录。</p><div class="backup-actions"><button class="primary" data-action="confirm-import-backup">选择备份文件</button><button class="secondary" data-action="cancel-import-backup">取消</button></div></div>` : ''}</section><button class="text-button settings-link" data-action="home">返回首页</button></div>`;
 }
 
 function render() {
@@ -478,8 +476,10 @@ function render() {
   else if (page === 'topics') app.innerHTML = topicsView();
   else if (page === 'topicQuestions') app.innerHTML = topicQuestionsView();
   else if (page === 'training') app.innerHTML = questionView();
+  else if (page === 'favorites') app.innerHTML = StudyUI.favoritesView();
   else if (page === 'mistakes') app.innerHTML = mistakesView();
   else if (page === 'settings') app.innerHTML = settingsView();
+  StudyUI.polish();
 }
 
 function explanationPrompt(q) {
@@ -487,8 +487,8 @@ function explanationPrompt(q) {
   const answer = q.answer ? `已知参考答案：${q.answer}。` : q.answerText ? `题库已有参考解析：${q.answerText}` : q.answerImage ? '第二张附图包含该题参考答案或原卷解析，请准确读取后据此讲解。' : '题库未提供机器可读的标准答案，请先独立求解并明确说明你的判断依据。';
   const userAnswer = attempt?.answer ? `我作答为：${attempt.answer}。` : '';
   if (q.questionText) {
-    const options = q.options ? `\n选项：${Object.entries(q.options).map(([key,value]) => `${key}. ${value}`).join('；')}` : '';
-    return `你是一位严谨的中国考研数学教师。请针对下面的原创高频考点练习独立推导，核对给出的参考答案；不要把它称为历年真题。\n考试范围：${q.exam}；考点：${q.topic}；题型：${TYPE_LABEL[q.questionType]}。\n题目：${q.questionText}${options}\n${answer}${userAnswer}\n请用中文说明考点和关键条件、分步推导或计算；若为选择题，请逐项判断选项，并指出常见误区。`;
+    const options = (q.textOptions || q.options) ? `\n选项：${Object.entries((q.textOptions || q.options)).map(([key,value]) => `${key}. ${value}`).join('；')}` : '';
+    return `你是一位严谨的中国考研数学教师。请针对下面的历年真题独立推导，核对给出的参考答案。\n考试范围：${q.exam}；考点：${q.topic}；题型：${TYPE_LABEL[q.questionType]}。\n题目：${q.questionText}${options}\n${answer}${userAnswer}\n请用中文说明考点和关键条件、分步推导或计算；若为选择题，请逐项判断选项，并指出常见误区。`;
   }
   return `你是一位严谨的中国考研数学教师。请先准确识别这张原题图片中的题干、公式、选项与设问，不要猜测看不清的符号。\n考试：${q.exam}；年份：${q.examYear}；题号：${q.questionNo}；题型：${TYPE_LABEL[q.questionType]}；考点：${q.topic}。\n${answer}${userAnswer}\n请用中文给出：1. 考点和关键条件；2. 分步推导或计算；3. 若为选择题，逐项说明选项；4. 核对参考答案并指出常见误区。若图片有无法确认之处，先指出具体位置，不要编造。`;
 }
@@ -498,8 +498,8 @@ function renderExplanation() {
   if (!q) return;
   const result = aiResults.get(q.id);
   const loading = aiPending.has(q.id);
-  const answerLabel = q.questionType === 'single' && q.options ? `${q.answer} · ${q.options[q.answer] || ''}` : q.answer;
-  document.getElementById('explanation-content').innerHTML = `<div class="sheet-grip"></div><div class="sheet-head"><div><small>${esc(examSource(q))}</small><h2>题目解析</h2></div><button class="image-close" data-action="close-explanation" aria-label="关闭">×</button></div><div class="sheet-topic">${esc(q.subject)} · ${esc(q.topic)} <span>难度 ${q.difficulty}/5</span></div>${q.answer?`<div class="reference-answer">参考答案 <strong>${esc(answerLabel)}</strong></div>`:''}${result ? `<div class="ai-result ${result.error?'ai-error':''}">${esc(result.text)}</div>` : `<p class="sheet-note">${q.questionText?'DeepSeek 会根据题干和选项生成逐步解析。':'DeepSeek 会读取原题图中的公式和选项，生成逐步解析。'}模型调用可能产生 API 费用。</p>`}<button class="primary generate-button" data-action="generate" ${loading?'disabled':''}>${loading?'正在解析…':result&&!result.error?'重新解析':result?.error?'重试':'DeepSeek 解析'}</button><div class="sheet-footer"><button class="text-button" data-action="configure">设置 API Key</button><button class="text-button" data-action="share">${q.isSupplemental?'复制整题':'分享原题图'}</button></div>`;
+  const answerLabel = q.questionType === 'single' && (q.textOptions || q.options) ? `${q.answer} · ${(q.textOptions || q.options)[q.answer] || ''}` : q.answer;
+  document.getElementById('explanation-content').innerHTML = `<div class="sheet-grip"></div><div class="sheet-head"><div><small>${esc(examSource(q))}</small><h2>题目解析</h2></div><button class="image-close" data-action="close-explanation" aria-label="关闭">×</button></div><div class="sheet-topic">${esc(q.subject)} · ${esc(q.topic)} <span>难度 ${q.difficulty}/5</span></div>${q.answer?`<div class="reference-answer">参考答案 <strong>${StudyUI.rich(answerLabel)}</strong></div>`:''}${result ? `<div class="ai-result ${result.error?'ai-error':''}">${esc(result.text)}</div>` : `<p class="sheet-note">${q.questionText?'DeepSeek 会根据题干和选项生成逐步解析。':'DeepSeek 会读取原题图中的公式和选项，生成逐步解析。'}模型调用可能产生 API 费用。</p>`}<button class="primary generate-button" data-action="generate" ${loading?'disabled':''}>${loading?'正在解析…':result&&!result.error?'重新解析':result?.error?'重试':'DeepSeek 解析'}</button><div class="sheet-footer"><button class="text-button" data-action="configure">设置 API Key</button><button class="text-button" data-action="share">复制题目</button></div>`;
   if (!dialog.open) dialog.showModal();
 }
 
@@ -591,9 +591,9 @@ function showExplanation() {
 async function shareQuestion() {
   const q = current();
   if (!q) return;
-  if (q.isSupplemental && q.questionText) {
-    const options = q.options ? `\n${Object.entries(q.options).map(([key,value]) => `${key}. ${value}`).join('\n')}` : '';
-    const text = `【${q.exam} · 原创高频考点补充题（非真题）】\n${q.subject} · ${q.chapter} · ${q.topic}\n${TYPE_LABEL[q.questionType]} · 难度 ${q.difficulty}/5\n\n${q.questionText}${options}`;
+  if (q.questionText) {
+    const options = (q.textOptions || q.options) ? `\n${Object.entries((q.textOptions || q.options)).map(([key,value]) => `${key}. ${value}`).join('\n')}` : '';
+    const text = `【${examSource(q)} · 历年真题】\n${q.subject} · ${q.chapter} · ${q.topic}\n${TYPE_LABEL[q.questionType]} · 难度 ${q.difficulty}/5\n\n${q.questionText}${options}`;
     try {
       if (window.AndroidApp?.copyText) { if (!AndroidApp.copyText(text)) throw new Error('clipboard'); }
       else await navigator.clipboard.writeText(text);
@@ -688,7 +688,7 @@ function restoreBackup(json) {
     if (payload?.format !== 'yanxi-probability-backup' || payload.version !== 1 || !payload.state || typeof payload.state !== 'object') {
       throw new Error('format');
     }
-    const source = payload.state;
+    const source = StudyUI.migrate(payload.state, bank);
     const validIds = new Set(byId.keys());
     const entriesForQuestions = (value, validValue = () => true) => Object.fromEntries(
       Object.entries(value && typeof value === 'object' && !Array.isArray(value) ? value : {})
@@ -703,6 +703,8 @@ function restoreBackup(json) {
       chapter: CHAPTER_ORDER.includes(source.chapter) ? source.chapter : '',
       topicKey: validTopicKeys.has(source.topicKey) ? source.topicKey : '',
       cursorByTopic: cursors,
+      favorites: entriesForQuestions(source.favorites, item => item && typeof item === "object"),
+      fontSize: [18,20,22].includes(source.fontSize) ? source.fontSize : 18,
       attempts: entriesForQuestions(source.attempts, item => item && typeof item === 'object'),
       mistakes: entriesForQuestions(source.mistakes, item => item && typeof item === 'object'),
       drafts: entriesForQuestions(source.drafts, item => typeof item === 'string'),
@@ -751,6 +753,9 @@ function handleClick(event) {
   if (el.dataset.openQuestion) { openQuestion(el.dataset.openQuestion, Number(el.dataset.openIndex)); return; }
   if (el.dataset.reviewId) { startMistakes([el.dataset.reviewId]); return; }
   switch (el.dataset.action) {
+    case 'favorites': go('favorites'); break;
+    case 'toggle-favorite': StudyUI.toggleFavorite(); break;
+    case 'review-favorites': StudyUI.startFavorites(); break;
     case 'home': go('home'); break;
     case 'directory': go('directory'); break;
     case 'topics': go('topics'); break;
@@ -803,7 +808,7 @@ function handleAndroidBack() {
   const imageDialog = document.getElementById('image-view');
   if (imageDialog.open) { imageDialog.close(); return true; }
   if (dialog.open) { dialog.close(); return true; }
-  if (review) { go('mistakes'); return true; }
+  if (review) { go(review.kind === 'favorites' ? 'favorites' : 'mistakes'); return true; }
   if (page === 'settings' && confirmImport) { confirmImport = false; render(); return true; }
   if (page === 'training') { go('topicQuestions'); return true; }
   if (page === 'topicQuestions') { go('topics'); return true; }

@@ -274,9 +274,9 @@ function questionView() {
       return `<button class="option ${stateClass}" data-choice="${letter}" aria-pressed="${isSelected}" ${answer ? 'disabled' : ''}><span class="letter">${letter}</span><span class="option-text">${esc(text)}</span><span class="option-state" aria-hidden="true">${answer && correct ? '✓' : answer && wrong ? '×' : isSelected ? '✓' : ''}</span></button>`;
     }).join('')}</div>${q.questionType === 'multiple' && !answer ? `<button class="primary confirm" data-action="submit" ${choices.length ? '' : 'disabled'}>确认答案 <span>${choices.length ? `已选 ${choices.length} 项` : '请选择所有正确项'}</span></button>` : ''}
     ${answer ? `<div class="result ${answer.correct ? 'correct' : 'wrong'}"><strong>${answer.correct ? '回答正确' : '回答错误 · 已加入错题本'}</strong><span>正确答案：${q.answer.split('').join('、')}　你的答案：${answer.answer.split('').join('、')}</span>${review && answer.correct && state.mistakes[q.id] && !state.mistakes[q.id].mastered ? `<button class="master-button" data-master="${esc(q.id)}">标记已掌握</button>` : ''}</div>` : ''}
-    <div class="question-tools"><button class="tool-button" data-action="explain"><span class="tool-icon">文</span>解析</button><button class="tool-button" data-action="copy"><span class="tool-icon copy-icon">▢</span>复制题目</button></div></article>
+    </article>
     ${storageOK ? '' : '<p class="storage-error">当前进度无法保存</p>'}
-    <nav class="bottom-nav"><button class="secondary" data-action="previous" ${index === 0 ? 'disabled' : ''}><span>‹</span>上一题</button><button class="primary" data-action="next" ${!review && index === total - 1 ? 'disabled' : ''}>${review && index === review.ids.length - 1 ? '完成复习' : '下一题'}<span>›</span></button></nav></div>`;
+    ${PoliticsDesign.dock(index,total)}</div>`;
 }
 
 function mistakesView() {
@@ -336,6 +336,7 @@ function render() {
       : page === 'categories' ? categoriesView()
         : page === 'directory' ? questionDirectoryView()
           : page === 'settings' ? settingsView() : mistakesView();
+  PoliticsDesign.polish();
 }
 
 function questionText(q = current()) {

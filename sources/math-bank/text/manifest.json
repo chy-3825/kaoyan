@@ -1,0 +1,18 @@
+{
+  "repository": "lx-ruc/kaoyanshuxue",
+  "commit": "196dc9d2d8271978a030a3721a828c8723cd3864",
+  "files": [
+    {
+      "file": "feishu_part_数学一.md",
+      "sha256": "d34379e4421cf81f26a185188162026be9c8414c7f9631ed5f685c32ce5d3638"
+    },
+    {
+      "file": "feishu_part_数学二.md",
+      "sha256": "0925a937a5a4de52486b7b5c6d77514aa38abe56b0da1a5b7b8085991fed53e2"
+    },
+    {
+      "file": "feishu_part_数学三.md",
+      "sha256": "96868da5ed2f2b720723e772b7cc8cf3e067b30c2a226f536c0378d8a3ef1a3b"
+    }
+  ]
+}

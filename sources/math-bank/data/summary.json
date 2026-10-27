@@ -1,23 +1,23 @@
 {
-  "total": 1464,
+  "total": 1224,
   "years": [
     2009,
     2026
   ],
   "exams": {
-    "数学一": 488,
-    "数学三": 488,
-    "数学二": 488
+    "数学一": 408,
+    "数学三": 408,
+    "数学二": 408
   },
   "subjects": {
-    "概率论与数理统计": 221,
-    "线性代数": 318,
-    "高等数学": 925
+    "概率论与数理统计": 181,
+    "线性代数": 270,
+    "高等数学": 773
   },
   "types": {
-    "solve": 640,
-    "single": 576,
-    "fill": 248
+    "solve": 576,
+    "single": 468,
+    "fill": 180
   },
   "assets": 1976,
   "missingImages": 0,
@@ -31,16 +31,5 @@
     "https://static.kaoyan.cn/file/question/2025/12/27/"
   ],
   "textSolutionFallbacks": 4,
-  "supplemental": 240,
-  "supplementalLabel": "原创高频考点练习，非真题",
-  "supplementalByExam": {
-    "数学一": 80,
-    "数学二": 80,
-    "数学三": 80
-  },
-  "supplementalBySubject": {
-    "高等数学": 152,
-    "线性代数": 48,
-    "概率论与数理统计": 40
-  }
+  "supplemental": 0
 }

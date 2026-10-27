@@ -29,26 +29,27 @@ def main():
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(f'http://127.0.0.1:{server.server_port}/apps/calculus/android/web/index.html')
-            page.wait_for_function('window.QUESTIONS?.length === 925')
+            page.wait_for_function('window.QUESTIONS?.length === 650')
             assert page.title() == '研习高数'
             page.screenshot(path=str(artifacts / 'home.png'), full_page=True)
             page.locator('[data-action="directory"]').click()
             assert page.locator('.chapter-card').count() == 8
-            assert page.evaluate('topicsFor().flatMap(t=>t.rows).length') == 925
+            assert page.evaluate('topicsFor().flatMap(t=>t.rows).length') == 650
+            assert page.evaluate('bank.every(q=>!q.isSupplemental && q.examYear && q.questionNo)')
             assert page.evaluate('CHAPTER_ORDER.every(c=>chapterRows(c).length>0)')
             page.screenshot(path=str(artifacts / 'chapters.png'), full_page=True)
             page.locator('.chapter-card').first.click()
             assert page.locator('.subtopic-list').is_visible()
             # Use original IDs to open representatives of every question type.
             def open_type(kind):
-                return page.evaluate('''kind=>{const q=bank.find(q=>q.questionType===kind && q.isSupplemental);
+                return page.evaluate('''kind=>{const q=bank.find(q=>q.questionType===kind);
                     openQuestion(questionKey(q),byTopic(questionKey(q)).findIndex(x=>x.id===q.id));return q.id;}''', kind)
             single = open_type('single')
             wrong = page.evaluate("'ABCD'.split('').find(c=>c!==current().answer)")
             page.locator(f'[data-choice="{wrong}"]').click()
             assert page.locator('.result.wrong').is_visible()
             page.reload()
-            page.wait_for_function('window.QUESTIONS?.length === 925')
+            page.wait_for_function('window.QUESTIONS?.length === 650')
             assert page.evaluate('pendingMistakes().length') == 1
             page.locator('[data-action="mistakes"]').click()
             page.locator('[data-action="review-all"]').click()
@@ -60,6 +61,10 @@ def main():
             page.locator('#fill-answer').fill('练习草稿')
             page.locator('[data-action="reveal"]').click()
             assert page.locator('.answer-panel').is_visible()
+            assert page.locator('[data-action="self-correct"]').inner_text() == '正确'
+            assert page.locator('[data-action="self-wrong"]').inner_text() == '错误'
+            assert page.locator('[data-action="self-correct"]').evaluate('el=>getComputedStyle(el).borderTopColor') == 'rgb(46, 125, 50)'
+            assert page.locator('[data-action="self-wrong"]').evaluate('el=>getComputedStyle(el).borderTopColor') == 'rgb(198, 40, 40)'
             assert page.evaluate('state.drafts[current().id]') == '练习草稿'
             page.locator('[data-action="self-wrong"]').click()
             solve = open_type('solve')
@@ -83,12 +88,35 @@ def main():
             page.evaluate("restoreBackup('{\"format\":\"yanxi-probability-backup\",\"version\":1,\"state\":{}}')")
             assert page.evaluate('Object.keys(state.attempts).length') == 2
             page.evaluate("go('settings')")
-            assert '925 题' in page.locator('#app').inner_text()
+            assert '650 题' in page.locator('#app').inner_text()
+            assert '专题练习' not in page.locator('#app').inner_text()
             page.screenshot(path=str(artifacts / 'settings.png'), full_page=True)
             assert not page.evaluate('document.documentElement.scrollWidth > innerWidth')
             assert not errors, errors
+            # The same self-assessment must work in the other two math apps.
+            for name, count in [('linear-algebra', 183), ('probability', 149)]:
+                page.goto(f'http://127.0.0.1:{server.server_port}/apps/{name}/android/web/index.html')
+                page.wait_for_function(f'window.QUESTIONS?.length === {count}')
+                assert page.evaluate('bank.every(q=>!q.isSupplemental && q.examYear && q.questionNo)')
+                for kind in ('fill', 'solve'):
+                    open_type(kind)
+                    page.locator('[data-action="reveal"]').click()
+                    right = page.locator('[data-action="self-correct"]')
+                    wrong = page.locator('[data-action="self-wrong"]')
+                    assert right.inner_text() == '正确' and wrong.inner_text() == '错误'
+                    assert right.evaluate('el=>getComputedStyle(el).borderTopColor') == 'rgb(46, 125, 50)'
+                    assert wrong.evaluate('el=>getComputedStyle(el).borderTopColor') == 'rgb(198, 40, 40)'
+                    wrong.click()
+                    assert page.evaluate('state.attempts[current().id].correct') is False
+                    page.locator('[data-action="self-correct"]').click()
+                    assert page.evaluate('state.attempts[current().id].correct') is True
+                    assert page.evaluate('state.mistakes[current().id].mastered') is True
+                page.screenshot(path=str(artifacts / f'{name}-self-assess.png'), full_page=True)
+                page.evaluate("go('settings')")
+                assert '专题练习' not in page.locator('#app').inner_text()
+                assert not errors, errors
             browser.close()
-        print('PASS: 925 questions accessible, 8 chapters, answer/review/drafts, persistence, backup isolation and mobile layout')
+        print('PASS: three math banks contain past papers only; correct/error labels and green/red colors; answer/review/drafts, persistence, backup isolation and mobile layout')
         print('Screenshots:', artifacts)
     finally:
         server.shutdown()

@@ -42,7 +42,7 @@ with sync_playwright() as p:
     page.locator('[data-action="zoom-figure"]').click();assert page.evaluate('handleAndroidBack()')
     assert not page.locator('#question-image-view').evaluate('(el)=>el.open')
    else:
-    page.evaluate('''id=>{const q=byId.get(id);state.subject=q.subject;const key=questionKey(q);openQuestion(key,byTopic(key,q.subject).findIndex(x=>x.id===id));}''',id)
+    page.evaluate('''id=>{const q=byId.get(id)||bank.find(q=>q.aliases?.includes(id));state.subject=q.subject;const key=questionKey(q);openQuestion(key,byTopic(key,q.subject).findIndex(x=>x.id===q.id));}''',id)
     page.wait_for_function("document.querySelector('.question-image')?.naturalWidth>0")
     page.screenshot(path=str(ARTIFACTS / f'{name}-{id}.png'),full_page=True)
     page.locator('[data-action="zoom-question"]').click()

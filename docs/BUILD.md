@@ -47,14 +47,13 @@ cd sources/math-bank
 python3 -m pip install -r requirements.txt
 python3 scripts/build_bank.py
 python3 scripts/build_2026_pdfs.py
-python3 scripts/build_supplemental.py
 ```
 
 PDF 脚本还需系统安装 Poppler 的 `pdftotext` 和 `pdftoppm`。网络源可变，重新生成结果不保证与快照相同；2026 裁图已修复。裁图还依赖 `PyMuPDF` 与 `Pillow`（已列入数学 requirements）。
 
 高数、概率、线代的 `scripts/build_bank.py` 根据各自本地题库整理生成运行数据。维护资料中的完整数学题库不会自动同步题目元数据到三个专题 App。修改题目时按原 ID 更新对应 App 的输入 JSONL，再执行其题库脚本。
 
-拆分完整性检查：`python3 scripts/test_math_split.py`，确认三个 App 完整覆盖原 1,464 题、ID 互不重叠，以及高数题干和答案等内容与题源一致。
+拆分完整性检查：`python3 scripts/test_math_split.py`，确认三个 App 完整覆盖 1,224 道真题、ID 互不重叠，以及高数题干和答案等内容与题源一致。三个数学 App 均不收录自编补充题。
 
 ## 政治 App
 

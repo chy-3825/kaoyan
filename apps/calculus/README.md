@@ -4,7 +4,7 @@
 
 ## 题库与使用
 
-- 共 925 题：773 道 2009–2026 年历年真题、152 道专题补充练习，覆盖数学一、二、三中的全部高等数学题。
+- 共 650 道合并后真题，对应 773 条 2009–2026 年试卷记录，不收录自编题。题目显示原卷图片，支持点击放大；复制题目时复制文字版。每题均有文字解析或原卷答案图，并支持收藏及字号调整。自评使用绿框绿字“正确”及红框红字“错误”。
 - 按教材顺序分为 8 章：函数、极限与连续；一元函数微分学；一元函数积分学；空间解析几何与向量代数；多元函数微分学；多元函数积分学；无穷级数；常微分方程与差分方程。
 - 合并按章节、考点练习，题目保留数一、数二、数三题源标记，支持选择、填空、解答题筛选。
 - 离线题图、已有答案、图片放大、错题本、草稿及学习记录导入导出。可选填个人 DeepSeek API Key 获取解析。
@@ -17,12 +17,12 @@ python3 scripts/build_bank.py
 python3 android/build.py
 ```
 
-使用现有题库构建只需第二条命令，不需要联网抓题。环境见[构建说明](../../docs/BUILD.md)。输出 `研习高数-1.1.0.apk`。包名为 `com.yanxi.calculus`，与原数学总库的 `com.yanxi.math` 分开安装。
+使用现有题库构建只需第二条命令，不需要联网抓题。环境见[构建说明](../../docs/BUILD.md)。输出 `研习高数-1.3.0.apk`。包名为 `com.yanxi.calculus`，与原数学总库的 `com.yanxi.math` 分开安装。安装包见[发布页](https://github.com/chy-3825/kaoyan/releases/tag/apps-20261027)。
 
 新构建使用独立本地签名，若曾安装历史研习高数 1.0.0，可能需要先导出记录、卸载旧版后安装。原研习数学安装和记录不会自动迁移；建议确认新 App 可用后再自行卸载原 App。
 
 ## 更新与来源
 
-`data/past_questions.jsonl` 与 `data/supplemental_questions.jsonl` 是本 App 题库输入，`scripts/build_bank.py` 负责校验并生成完整 JSONL、运行题库和统计。完整原数学题库和维护脚本保存在 [`sources/math-bank`](../../sources/math-bank/README.md)，没有数学总库 App。
+`data/past_questions.jsonl` 是本 App 真题输入，`scripts/build_bank.py` 负责校验并生成完整 JSONL、运行题库和统计。完整原数学题库和维护脚本保存在 [`sources/math-bank`](../../sources/math-bank/README.md)，没有数学总库 App。
 
-历年题目与参考答案图片来自 [lx-ruc/kaoyanshuxue](https://github.com/lx-ruc/kaoyanshuxue) 的公开整理和保存的 2026 原卷 PDF，具体信息见 `data/source_manifest.json`。补充练习明确标记为非真题。第三方题图与解析图的再发行授权尚未确认，公开或商业分发前应核实授权。
+历年题目与参考答案图片来自 [lx-ruc/kaoyanshuxue](https://github.com/lx-ruc/kaoyanshuxue) 的公开整理和保存的 2026 原卷 PDF，具体信息见 `data/source_manifest.json`。全部自编补充题已删除。第三方题图与解析图的再发行授权尚未确认，公开或商业分发前应核实授权。
